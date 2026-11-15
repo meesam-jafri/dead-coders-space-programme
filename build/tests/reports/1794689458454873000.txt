@@ -1,0 +1,36 @@
+LUNAR MISSION / SUCCESS
+
+Ship: Scout
+Ground team: 
+Payloads:
+  Lunar camera
+  Large solar panel
+  Battery pack
+  Basic antenna
+Rocket: Budget Launcher
+Orbit: High lunar
+Launch: DAY 02 / Clear / ideal transfer
+
+Cost: 580 / 1200 credits. Mass: 75 kg.
+Generation: 42 W. Installed load: 17 W.
+Mission duration: 9.60022 hours. Health: 100%.
+Observations: 21.8269 / 10. Returned data: 65.482 / 21.
+Generated: 65.482. Onboard: 0. Battery: 21.2271 Wh.
+Educational score: 92 / 100.
+
+RESEARCH
+Camera installed: surface imaging was part of the science plan.
+Only collected and returned data contributes to mission performance.
+
+TIMELINE
+Hour 2.8: issue 3, response 1 applied.
+Hour 6.4: issue 1, response 1 applied.
+
+LESSONS / RECOMMENDATIONS
+Battery energy is stored in Wh; solar power is generated in W.
+A blocked Earth link requires onboard storage until contact returns.
+Your radio returned the required science. Try a lower-cost design.
+Observation target met. Compare other instrument combinations.
+
+All numerical values are fictional game balance.
+Images below are supplied illustrations, not captures from this flight.
