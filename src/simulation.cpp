@@ -5,6 +5,7 @@ namespace mission {
         g.noticeTime=4;
     }
     void Go(GameState& g,int stage,const AudioFeedback& a){
+        if(stage==10&&!g.reportSaved)g.timeline.push_back(std::string(TextFormat("Hour %.1f: mission ended. Health %.0f%%; observations %.1f; returned data %.1f.",g.flight.time*kMissionHoursPerSecond,g.flight.health,g.flight.observations,g.flight.returned)));
         if(g.stage==8&&stage!=8&&a.ready)StopSound(a.launch);
         if(stage==8){g.timeline.push_back("Launch: countdown and ascent started.");} if(stage==9){g.timeline.push_back("Orbit insertion complete: operations started.");} g.stage=stage; if(stage==10 && !g.reportSaved)SaveReport(g);
         g.transition=g.reducedMotion?0:0.25f;
@@ -66,7 +67,7 @@ namespace mission {
             if(choice==0)f.camera=false;
             else if(choice==1){
                 float removed=f.stored*(g.team[1]?0.15f:0.3f);
-                f.stored-=removed;
+                f.imagingStored*=1-removed/std::max(0.001f,f.stored); f.stored-=removed;
                 f.health+=g.team[1]?2:0;
             }
             else f.transmit=true;
@@ -79,6 +80,9 @@ namespace mission {
             else if(choice==1)f.camera=false;
             else if(g.team[3]||g.team[0])f.pointing=0;
         }
+        const char* issues[]={"reduced solar output","radio fault","instrument overheating","storage pressure","pointing fault"};
+        const char* actions[][3]={{"stopped science to reduce load","entered safe mode, suspending science","requested panel recovery or accepted damage risk"},{"requested remote radio recovery","selected backup radio recovery","stopped transmission; data stays onboard"},{"stopped science and cleared heat","reduced duty while cooling","continued science at a health cost"},{"stopped collection to preserve storage","discarded data to free storage","enabled downlink during contact"},{"recalibrated pointing at a health cost","suspended observations","requested specialist pointing recovery"}};
+        if(e>=0&&e<5&&choice>=0&&choice<3)g.timeline.push_back(std::string(TextFormat("Hour %.1f: Decision: %s -> %s. Result: health %.0f%%; battery %.1f Wh; stored %.1f. Science %s, transmission %s. Recovery timers may still be active.",f.time*kMissionHoursPerSecond,issues[e],actions[e][choice],f.health,f.energy,f.stored,f.camera?"enabled":"disabled",f.transmit?"enabled":"disabled")));
         f.health=Clamp(f.health,0,100);
         f.event=-1;
         Notice(g,"Command applied. Check your science and transmit controls.",false);
@@ -119,13 +123,13 @@ namespace mission {
         }
         if(science){
             float data=fminf(t.storage-f.stored,t.science*duty*dt*(g.orbit==0?1:1.2f));
-            f.stored+=data;
+            float imagingRate=0;for(int id:g.installed)if(id==0||id==1)imagingRate+=parts[id].science; f.imagingStored+=data*imagingRate/std::max(0.001f,t.science); f.stored+=data;
             f.generated+=data;
             f.observations+=data/3;
         }
         if(radio){
             float sent=fminf(f.stored,t.radio*dt*(g.team[2]?1.25f:1));
-            f.stored-=sent;
+            float imageSent=sent*f.imagingStored/std::max(0.001f,f.stored);f.imagingStored-=imageSent;f.imagingReturned+=imageSent; f.stored-=sent;
             f.returned+=sent;
         }
         if(f.risk>0){
@@ -134,7 +138,7 @@ namespace mission {
         }
         f.health=Clamp(f.health,0,100);
         if(f.nextEvent<2&&f.time>=35+f.nextEvent*45){
-            f.event=f.events[f.nextEvent++];
+            f.event=f.events[f.nextEvent++]; g.timeline.push_back(std::string(TextFormat("Hour %.1f: emergency %s detected.",f.time*kMissionHoursPerSecond,f.event==0?"solar shortage":f.event==2?"instrument overheating":"subsystem fault")));
             if(f.event==0)f.solarFault=18;
             if(f.event==1)f.radioFault=22;
             if(f.event==2)f.heat=16;

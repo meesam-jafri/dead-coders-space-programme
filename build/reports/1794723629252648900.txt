@@ -1,0 +1,40 @@
+LUNAR MISSION / FAILURE
+
+MISSION CONFIGURATION
+Ship: Explorer
+Ground team: Engineer; Scientist; Pilot; 
+Payloads:
+  Lunar camera
+  Basic antenna
+  Battery pack
+  Small solar panel
+Rocket: Standard Launcher
+Orbit: Low lunar
+Launch: 2026-11-02 / Clear sky. Favorable transfer window.
+
+PERFORMANCE
+Cost: $920 / Budget $1,200. Mass: 92 kg.
+Generation: 22 W. Installed load: 17 W.
+Mission duration: 9.6 hours. Health: 100%.
+Observations: 9.37613 / 10. Returned data: 28.1284 / 21.
+Generated: 28.1284. Onboard: 0. Battery: 21.7549 Wh.
+Educational score: 67 / 100.
+
+RESEARCH
+Camera installed: surface imaging was part of the science plan.
+Only collected and returned data contributes to mission performance.
+
+TIMELINE
+Launch: countdown and ascent started.
+Orbit insertion complete: operations started.
+Hour 2.8: issue 1, response 2 applied.
+Hour 6.4: issue 3, response 2 applied.
+
+LESSONS / RECOMMENDATIONS
+Battery energy is stored in Wh; solar power is generated in W.
+A blocked Earth link requires onboard storage until contact returns.
+Your radio returned the required science. Try a lower-cost design.
+Keep science enabled longer when power allows.
+
+All numerical values are fictional game balance.
+Images below are supplied illustrations, not captures from this flight.

@@ -4,36 +4,69 @@ namespace mission {
         auto t=Resources(g);
         auto& f=g.flight;
         if(g.stage==0){
-            DrawCircleGradient({1200,1150},580,{42,135,187,255},{12,40,77,255});
-            DrawEllipse(1150,750,120,35,{65,170,145,255}); Ship({1220,450},1.2f,g.craft,time);
+            auto bg=Skin().menuBackground;
+            if(bg.id){float scale=std::max(1600.0f/bg.width,900.0f/bg.height);DrawTexturePro(bg,{0,0,float(bg.width),float(bg.height)},{(1600-bg.width*scale)/2,(900-bg.height*scale)/2,bg.width*scale,bg.height*scale},{0,0},0,WHITE);}
+            DrawRectangle(0,0,1600,900,Fade(kBackground,0.25f));
+            auto earth=Skin().earth;
+            if(earth.id)DrawTexturePro(earth,{0,0,float(earth.width),float(earth.height)},{990,470,730,730},{0,0},0,WHITE);
             auto title=Typography().title;
             for(int row=0;row<2;++row){const char* word=row==0?"DEAD CODERS":"SPACE MISSION";
                 float width=MeasureTextEx(title,word,70,2).x;
                 DrawTextEx(title,word,{800-width/2,185.0f+row*90},70,2,row==0?kText:kAccent);}
             Text("Build. Launch. Explore.",570,385,28,kGold);
-            if(Button({180,465,330,65},"PLAY",in,true,true))Next(g,a);
-            if(Button({180,550,330,65},"SETTINGS",in))g.overlay=2;
-            if(Button({180,635,330,65},"INFO",in))g.overlay=1;
-            if(Button({180,720,155,50},"ARCHIVE",in)){g.reportText.clear();g.reportSaved=true;g.reportScroll=0;Go(g,10,a);}
-            if(Button({355,720,155,50},"EXIT",in))g.exitRequested=true;
+            if(Button({180,455,400,72},"PLAY",in,true,true))Next(g,a);
+            if(Button({180,635,400,65},"SETTINGS",in))g.overlay=2;
+            if(Button({180,720,400,65},"INFO",in))g.overlay=1;
+            if(Button({180,545,400,65},"PAST MISSIONS",in)){g.reportText.clear();g.reportSaved=true;g.reportScroll=0;Go(g,10,a);}
+
             return;
         }
         if(g.stage==1){
-            Text("CHOOSE YOUR NEXT FRONTIER",70,180,22,kMuted);
-            for(int i=0;i<3;++i){
-                float x=70+i*495.0f;Rectangle card{x,230,470,480};bool hover=Hovered(card,in);
-                Panel(card,i==0?Color{31,27,23,255}:kPanel,i==0&&g.moon?kAccent:hover?kMuted:kBorder);
+            Text("CHOOSE YOUR NEXT FRONTIER / HOVER TO EXPLORE",70,180,22,kMuted);
+            static int focus=-1;static float expansion=0;
+            auto cardBounds=[&](int i,float amount){return Rectangle{Lerp(70+i*495.0f,70,amount),230,Lerp(470,1460,amount),480};};
+            float ease=expansion*expansion*(3-2*expansion);
+            bool staying=focus>=0&&Hovered(cardBounds(focus,ease),in);
+            if(focus<0){for(int i=0;i<3;++i)if(Hovered(cardBounds(i,0),in)){focus=i;staying=true;break;}}
+            float step=GetFrameTime()/0.3f;
+            expansion=in.reducedMotion?(staying?1.0f:0.0f):Clamp(expansion+(staying?step:-step),0,1);
+            if(!staying&&expansion<=0)focus=-1;
+            ease=expansion*expansion*(3-2*expansion);
+            auto drawCard=[&](int i,bool expanded){
+                Rectangle card=cardBounds(i,expanded?ease:0);
+                if(focus>=0&&!expanded)card.x+=(i<focus?-1:1)*ease*300;
+                float x=card.x;
+                Panel(card,i==0&&g.moon?kSelected:kPanel,i==0&&g.moon?kAccent:kBorder);
                 Text(TextFormat("0%d / %s",i+1,i==0?"AVAILABLE":"LOCKED"),x+26,252,20,i==0?kAccent:kMuted);
                 Vector2 p{x+235,425};float radius=i==0?112:96;
-                DrawCircleGradient(p,radius+30,Fade(i==0?kAccent:kMuted,0.12f),BLANK);
+                DrawCircleGradient(p,radius+30,Fade(i==0?Color{255,139,54,255}:kMoonColor,0.12f),BLANK);
                 Moon(p,radius,i==0?Color{200,197,184,255}:i==1?Color{174,91,63,255}:Color{178,145,109,255});
                 if(i==2)for(int j=-3;j<=3;++j){float dy=j*23.0f;float width=std::sqrt(radius*radius-dy*dy);DrawLineEx({p.x-width,p.y+dy},{p.x+width,p.y+dy},9,Fade({113,78,55,255},0.4f));}
-                if(i>0){DrawRectangleRounded({p.x-14,p.y-8,28,24},0.2f,6,kBackground);DrawCircleLines(int(p.x),int(p.y-12),12,kBackground);}
-                Text(i==0?"THE MOON":i==1?"MARS":"JUPITER",x+26,556,34,i==0?kText:kMuted);
-                Text(i==0?"Surface mapping / Easy mission":"Future expedition",x+26,602,22,kMuted);
-                if(Button({x+25,647,420,46},i==0?(g.moon?"MISSION SELECTED":"SELECT LUNAR MISSION"):"UNAVAILABLE",in,i==0,g.moon&&i==0)){g.moon=true;a.Play(g);}
-                if(hover&&i>0)Text("This destination is not yet playable.",x+26,316,20,kDanger);
-            }
+                if(i>0){DrawRectangleRounded({p.x-14,p.y-8,28,24},0.2f,6,{12,12,14,255});DrawCircleLines(int(p.x),int(p.y-12),12,{12,12,14,255});}
+                Text(i==0?"LUNAR RECON":i==1?"MARS EXPLORATION":"JUPITER EXPEDITION",x+26,556,29,kText);
+                Text(i==0?"THE MOON / EASY":i==1?"MARS / MEDIUM":"JUPITER / HARD",x+26,602,22,kMuted);
+                Input cardInput=in;cardInput.enabled=in.enabled&&(focus<0||expanded);
+                if(Button({x+25,647,420,46},i==0?(g.moon?"MISSION SELECTED":"SELECT LUNAR MISSION"):"LOCKED / FUTURE MISSION",cardInput,i==0,!g.moon,g.moon&&i==0)){g.moon=true;in.clicked=false;a.Play(g);}
+                if(expanded&&ease>0.62f){
+                    BeginScissorMode(int(card.x),230,int(card.width),480);
+                    float opacity=Clamp((ease-0.62f)/0.38f,0,1),tx=x+530;
+                    Color normal=Fade(kText,opacity),accent=Fade(kAccent,opacity);
+                    DrawLine(int(tx-35),285,int(tx-35),675,Fade(kBorder,opacity));
+                    Text(i==0?"OUR CLOSEST NEIGHBOR":i==1?"THE RED PLANET":"THE GAS GIANT",tx,290,32,normal);
+                    WrappedText(i==0?"Explore our closest celestial neighbor.":i==1?"Discover the secrets of the Red Planet.":"Venture into the giant planet's dangerous environment.",tx,345,830,26,normal);
+                    Text(i==0?"OBJECTIVE":"CHALLENGE",tx,445,20,accent);
+                    WrappedText(i==0?"Observe the lunar surface and return scientific data.":i==1?"Long-distance communication and limited resources.":"Radiation, distance, and power management.",tx,477,830,24,normal);
+                    Text(i==0?"CHALLENGE":"DIFFICULTY",tx,545,20,accent);
+                    Text(i==0?"Manage power, equipment, and communications.":i==1?"Medium / a longer journey":"Hard / an extreme environment",tx,577,23,normal);
+                    Text(i==0?"REWARD / Complete your first space mission.":"COMING IN A FUTURE MISSION",tx,640,23,normal);
+                    EndScissorMode();
+                }
+                if(focus>=0&&!expanded)DrawRectangleRec(card,Fade(kBackground,ease));
+            };
+            BeginScissorMode(60,225,1480,495);
+            for(int i=0;i<3;++i)if(i!=focus&&ease<0.999f)drawCard(i,false);
+            if(focus>=0)drawCard(focus,true);
+            EndScissorMode();
             Text("BUDGET  "+Money(kBudget)+"   /   10 observations   /   Return 21 data units",80,750,25,kGold);
             Text("Orbit the Moon, study the surface and bring the science home.",80,788,22,kMuted);
             return;
@@ -46,7 +79,7 @@ namespace mission {
                 auto c=crafts[i];
                 if(Button({
                     1040,float(230+i*145),460,65}
-                ,(std::string(c.name)+(g.craft==i?" / SELECTED":"")).c_str(),in)){
+                ,(std::string(c.name)+(g.craft==i?" / SELECTED":"")).c_str(),in,true,false,g.craft==i)){
                     GameState trial=g;
                     trial.craft=i;
                     bool fits=true;
@@ -84,11 +117,12 @@ namespace mission {
                 ,5,kBackground);
                 DrawLine(int(x+100),int(y+19),int(x+130),int(y+19),kBackground);
                 DrawCircleLines(int(x+115),int(y),55,i<4&&g.team[i]?kAccent:kGold);
+                if(Skin().portraits[i].id){DrawCircleV({x+115,y},70,kPanel);auto portrait=Skin().portraits[i];DrawTexturePro(portrait,{0,0,float(portrait.width),float(portrait.height)},{x+40,y-75,150,150},{0,0},0,WHITE);DrawCircleLines(int(x+115),int(y),78,g.team[i]?kAccent:kBorder);}
                 WrappedText(names[i],x,430,260,27,kText);
                 WrappedText(abilities[i],x,515,260,22,kMuted);
                 if(Button({
                     x,640,260,60}
-                ,i==3?"Not needed":g.team[i]?"Release / refund":TextFormat("Hire / $%d",salaries[i]),in,i<3)){
+                ,i==3?"Not needed":g.team[i]?"Release / refund":TextFormat("Hire / $%d",salaries[i]),in,i<3,false,g.team[i])){
                     if(g.team[i])g.team[i]=false;
                     else if(std::count(g.team.begin(),g.team.end(),true)>=3)Notice(g,"Ground team limit: three specialists.");
                     else if(t.cost+salaries[i]>kBudget)Notice(g,"Not enough money.");
@@ -100,33 +134,71 @@ namespace mission {
             return;
         }
         if(g.stage==4){
+            static int failedItem=-1;static float failure=0;
+            failure=std::max(0.0f,failure-GetFrameTime());
             if(in.enabled && CheckCollisionPointRec(in.mouse,{55,235,520,505}))g.payloadScroll=Clamp(g.payloadScroll-GetMouseWheelMove(),0,5);
             Scrollbar({555,245,14,465},g.payloadScroll,5,5,in);g.page=int(std::round(g.payloadScroll));
             Text("EQUIPMENT / scroll",70,190,25,kGold);
+            constexpr const char* education[]={
+                "Science instruments are the mission payload. In this game, a camera collects surface data but needs power and storage.",
+                "Choose instruments around your science goal. This fictional camera collects faster but uses more electricity and storage.",
+                "An altimeter measures terrain height. Here it enables observations even during eclipse, using battery power.",
+                "Solar panels turn sunlight into electricity. In shadow, the battery powers your ship. Add enough generation for the installed load.",
+                "Solar panels turn sunlight into electricity. In shadow, the battery powers your ship. Add enough generation for the installed load.",
+                "Batteries store energy for periods without solar power. Add reserve capacity to keep instruments running through shadow.",
+                "Antennas support commands and data exchange with Earth. Here, science stays in storage until a contact window opens.",
+                "Antennas support commands and data exchange with Earth. Here, a faster radio clears storage sooner but draws more power.",
+                "Onboard storage holds observations until downlink. Here, full storage pauses collection; transmit data or add capacity.",
+                "Redundancy provides a fallback if hardware fails. Here, a backup computer adds a radio recovery option at extra cost and mass."
+            };
             for(int j=0;j<5;++j){int id=g.page+j;float y=245+j*100;int count=int(std::count(g.installed.begin(),g.installed.end(),id));
-                Text(parts[id].name,70,y,23,count?kAccent:kText);
-                Text(TextFormat("$%d / %d kg / installed %d",parts[id].cost,parts[id].mass,count),70,y+32,19,kMuted);
-                if(Button({420,y,50,55},"+",in)){auto slot=std::find(g.installed.begin(),g.installed.begin()+crafts[g.craft].slots,-1);
-                    if(slot==g.installed.begin()+crafts[g.craft].slots)Notice(g,"No free slots. Remove a module first.");
-                    else if(t.cost+parts[id].cost>kBudget||t.mass-crafts[g.craft].dryMass+parts[id].mass>crafts[g.craft].mass)Notice(g,"Too expensive or too heavy for this ship.");
-                    else{*slot=id;a.Play(g,true);Notice(g,"Equipment installed. Resources updated.",false);}}
-                if(Button({480,y,50,55},"-",in,count>0)){*std::find(g.installed.begin(),g.installed.end(),id)=-1;a.Play(g);}
-                if(InfoButton({380,y+12,26,26},in))Notice(g,parts[id].tip,false); Tooltip(in,{70,y,340,70},parts[id].tip);
+                float shake=(id==failedItem&&failure>0&&!g.reducedMotion)?std::sin(failure*80)*3*(failure/0.45f):0;
+                if(count)DrawRectangleRounded({62+shake,y-5,480,76},0.08f,8,kSelected);
+                if(id==failedItem&&failure>0)DrawRectangleRoundedLinesEx({62+shake,y-5,480,76},0.08f,8,2,Fade(kDanger,failure/0.45f));
+                Text(parts[id].name,70+shake,y,23,kText);
+                Text(TextFormat("$%d / %d kg",parts[id].cost,parts[id].mass),70+shake,y+32,19,kMuted);
+                if(Button({420+shake,y,50,55},"+",in)){
+                    auto current=Resources(g);
+                    auto slot=std::find(g.installed.begin(),g.installed.begin()+crafts[g.craft].slots,-1);
+                    std::string error;
+                    if(slot==g.installed.begin()+crafts[g.craft].slots)error="NOT ENOUGH SLOTS / remove equipment first.";
+                    else if(current.cost+parts[id].cost>kBudget)error="NOT ENOUGH BUDGET / remove equipment or choose a cheaper option.";
+                    else if(current.mass-crafts[g.craft].dryMass+parts[id].mass>crafts[g.craft].mass)error="PAYLOAD TOO HEAVY / reduce mass before adding this item.";
+                    if(!error.empty()){Notice(g,error);failedItem=id;failure=0.45f;}
+                    else{*slot=id;a.Play(g,true);}
+                }
+                if(Button({480+shake,y,50,55},"-",in,count>0)){*std::find(g.installed.begin(),g.installed.end(),id)=-1;a.Play(g);}
+                count=int(std::count(g.installed.begin(),g.installed.end(),id));
+                if(count){DrawCircleV({467+shake,y+1},13,kAccent);Text(std::to_string(count),461+shake,y-10,19,kBackground);}
+                InfoTip({380,y+12,26,26},in,parts[id].name,education[id]);
             }
             if(Button({70,760,170,45},"UP",in,g.page>0))g.payloadScroll=std::max(0.0f,g.payloadScroll-1);
             if(Button({260,760,170,45},"DOWN",in,g.page<5))g.payloadScroll=std::min(5.0f,g.payloadScroll+1);
             Ship({800,460},1.45f,g.craft,0);
             Text(crafts[g.craft].name,710,650,32,kAccent);
-            Panel({1080,205,450,580});Text("READINESS",1110,240,30,kGold);
+            Panel({1080,205,450,580});Text("MISSION READINESS",1105,235,27,kText);
+            InfoTip({1485,235,25,25},in,"PREFLIGHT TESTING","Real CubeSats undergo environmental tests, including vibration. Here, all four equipment checks must pass before you can continue.");
             t=Resources(g);
-            const char* labels[]={"Science instrument","Antenna","Battery","Enough solar power"};
+            const char* labels[]={"Science instrument","Communication antenna","Battery","Sufficient solar power"};
             bool checks[]={t.science>0,t.radio>0,t.battery>0,t.generation>=t.load};
-            for(int i=0;i<4;++i)Text(std::string(checks[i]?"OK  ":"NEED  ")+labels[i],1110,300+i*45,22,checks[i]?kAccent:kDanger);
-            Text(TextFormat("Payload %d / %d kg",t.mass-crafts[g.craft].dryMass,crafts[g.craft].mass),1110,520,22);
-            Text(TextFormat("Slots %d / %d",t.used,crafts[g.craft].slots),1110,560,22);
-            Text(TextFormat("Power %.0f / %.0f W",t.generation,t.load),1110,600,22);
-            Text(TextFormat("Battery %.0f Wh",t.battery),1110,640,22);
-            Text(TextFormat("Storage %.0f data",t.storage),1110,680,22);
+            static std::array<float,4> ticks{};
+            for(int i=0;i<4;++i){
+                ticks[i]=g.reducedMotion?float(checks[i]):Lerp(ticks[i],float(checks[i]),Clamp(GetFrameTime()*14,0,1));
+                float y=292+i*43;
+                DrawRectangleRounded({1108,y,24,24},0.15f,6,checks[i]?kSelected:kBackground);
+                DrawRectangleRoundedLinesEx({1108,y,24,24},0.15f,6,1.5f,checks[i]?Color{91,210,202,255}:kDanger);
+                if(ticks[i]>0.01f){
+                    Vector2 start{1113,y+12},middle{1119,y+18},end{1128,y+6};
+                    DrawLineEx(start,Vector2Lerp(start,middle,Clamp(ticks[i]*2,0,1)),2.5f,kAccent);
+                    if(ticks[i]>0.5f)DrawLineEx(middle,Vector2Lerp(middle,end,(ticks[i]-0.5f)*2),2.5f,kAccent);
+                }
+                Text(labels[i],1144,y,21,checks[i]?Color{91,210,202,255}:kDanger);
+            }
+            DrawLine(1105,478,1505,478,kBorder);Text("SPACECRAFT STATS",1105,496,25,kText);
+            const char* stats[]={"Payload mass","Slots used","Power used / generated","Battery capacity","Storage capacity"};
+            std::string values[]={TextFormat("%d / %d kg",t.mass-crafts[g.craft].dryMass,crafts[g.craft].mass),TextFormat("%d / %d",t.used,crafts[g.craft].slots),TextFormat("%.0f / %.0f W",t.load,t.generation),TextFormat("%.0f Wh",t.battery),TextFormat("%.0f data",t.storage)};
+            for(int i=0;i<5;++i){float y=546+i*40;Text(stats[i],1105,y,18,kMuted);Text(values[i],1505-TextWidth(values[i].c_str(),21),y,21,kText);}
+            InfoTip({1485,495,25,25},in,"MASS AND CAPACITY","Launch systems limit spacecraft mass. Extra equipment can exceed your ship or rocket capacity; compare the totals before choosing a launcher.");
             return;
         }
         if(g.stage==5){
@@ -137,7 +209,7 @@ namespace mission {
                 ,i,g.rocket==i?45+std::sin(time*20)*10:0);
                 if(Button({
                     x-190,610,380,60}
-                ,rockets[i].name,in,true,g.rocket==i)){
+                ,rockets[i].name,in,true,false,g.rocket==i)){
                     int cost=t.cost-(g.rocket>=0?rockets[g.rocket].cost:0)+rockets[i].cost;
                     if(t.mass>rockets[i].capacity)Notice(g,"Not ready: total spacecraft mass exceeds lunar capacity.");
                     else if(cost>kBudget)Notice(g,"Not enough money for this rocket.");
@@ -170,7 +242,7 @@ namespace mission {
                 }
                 if(Button({
                     1020,float(300+i*180),470,65}
-                ,i==0?"LOW LUNAR ORBIT":"HIGH LUNAR ORBIT",in,true,g.orbit==i)){
+                ,i==0?"LOW LUNAR ORBIT":"HIGH LUNAR ORBIT",in,true,false,g.orbit==i)){
                     g.orbit=i;
                     a.Play(g);
                 }
@@ -193,7 +265,7 @@ namespace mission {
                 auto weather=WeatherFor(g.calendarYear,g.calendarMonth,day);
                 bool selected=g.date==day-1&&g.launchYear==g.calendarYear&&g.launchMonth==g.calendarMonth;
                 bool hover=Hovered(box,in);
-                Panel(box,selected?Color{65,42,25,255}:Color{34,32,30,255},selected?kAccent:hover?kMuted:kBorder);
+                Panel(box,selected?kSelected:kPanel,selected?kAccent:hover?kMuted:kBorder);
                 Text(std::to_string(day),box.x+10,box.y+5,24,selected?kAccent:kText);
                 WeatherIcon({box.x+89,box.y+25},weather,0.65f);
                 Text(!weather.Valid()?"BLOCKED":weather.delay?"CAUTION":"CLEAR",box.x+8,box.y+43,15,!weather.Valid()?kDanger:weather.delay?kGold:kSuccess);
@@ -250,8 +322,8 @@ namespace mission {
             bool link=phase<(g.orbit==0?0.58f:0.76f)&&f.radioFault<=0;
             DrawCircleV({780,2400},1830,{89,84,77,255});
             for(int i=0;i<16;++i){float x=std::fmod(i*180.0f-f.time*30+5000,1900.0f)-150;DrawEllipse(int(x),int(660+(i%3)*65),40,12,{58,56,53,255});}
-            Ship({795,440},1.9f,g.craft,0);
-            if(f.camera&&f.mode!=2&&f.heat<=0&&f.pointing<=0&&f.energy>0)DrawLineEx({795,460},{900,700},3,Fade(kAccent,0.5f));
+            Ship({795,510},1.7f,g.craft,0);
+            if(f.camera&&f.mode!=2&&f.heat<=0&&f.pointing<=0&&f.energy>0)DrawLineEx({795,530},{900,700},3,Fade(kAccent,0.5f));
             Panel({60,190,460,113});
             Text("SIMULATION REMAINING",85,205,20,kMuted);Text(Clock(kOperationSeconds-f.time),85,238,42,kOperationSeconds-f.time<20?kDanger:kAccent);
             Panel({545,190,490,113});Text("ACCELERATED MISSION CLOCK",570,205,20,kMuted);Text(Clock(f.time*kMissionHoursPerSecond*3600),570,238,42,kText);
@@ -266,13 +338,13 @@ namespace mission {
             Text(g.paused?"PAUSED":"Time factor: x"+std::to_string(g.speed),85,710,25,kGold);
             Panel({1110,330,430,460});
             Text("MISSION CONTROL",1135,355,25,kGold);
-            if(Button({1135,405,380,55},f.camera?"SCIENCE ON":"SCIENCE OFF",in,true,f.camera))f.camera=!f.camera;
-            if(Button({1135,478,380,55},f.transmit?"TRANSMIT ON":"TRANSMIT OFF",in,true,f.transmit))f.transmit=!f.transmit;
+            if(Button({1135,405,380,55},f.camera?"SCIENCE ON":"SCIENCE OFF",in,true,false,f.camera))f.camera=!f.camera;
+            if(Button({1135,478,380,55},f.transmit?"TRANSMIT ON":"TRANSMIT OFF",in,true,false,f.transmit))f.transmit=!f.transmit;
             if(Button({1135,551,380,55},f.mode==0?"MODE: SCIENCE":f.mode==1?"MODE: BALANCED":"MODE: SAFE",in))f.mode=(f.mode+1)%3;
             Meter("Storage / data",f.stored,t.storage,1135,638,f.stored>t.storage*0.85f?kDanger:kGold);
-            if(Button({1135,735,180,40},g.paused?"RESUME":"PAUSE",in))g.paused=!g.paused;
+            if(Button({1135,735,180,40},g.paused?"RESUME":"PAUSE",in,true,g.paused,!g.paused))g.paused=!g.paused;
             if(Button({1330,735,185,40},"END MISSION",in))Go(g,10,a);
-            if(Button({640,732,310,55},TextFormat("TIME SPEED x%d",g.speed),in))g.speed=g.speed==1?3:g.speed==3?5:1;
+            for(int i=0;i<3;++i){int speed=i==0?1:i==1?3:5; if(Button({640+i*108.0f,732,100,55},TextFormat("x%d",speed),in,true,false,g.speed==speed))g.speed=speed;}
             Text("Simplified model / 1 simulation second = 4.8 mission minutes",490,798,18,kMuted);
             return;
         }
@@ -339,13 +411,13 @@ namespace mission {
             Text("SETTINGS",280,230,40,kAccent);
             if(Button({
                 280,340,480,65}
-            ,g.soundEnabled?"SOUND: ON":"SOUND: OFF",input)){
+            ,g.soundEnabled?"SOUND: ON":"SOUND: OFF",input,true,false,g.soundEnabled)){
                 g.soundEnabled=!g.soundEnabled;
                 a.Play(g);
             }
             if(Button({
                 800,340,480,65}
-            ,g.reducedMotion?"REDUCED MOTION: ON":"REDUCED MOTION: OFF",input))g.reducedMotion=!g.reducedMotion;
+            ,g.reducedMotion?"REDUCED MOTION: ON":"REDUCED MOTION: OFF",input,true,false,g.reducedMotion))g.reducedMotion=!g.reducedMotion;
             Text("F11: fullscreen / Esc: pause or return / Settings last this session",280,470,24,kMuted);
         }
         if(g.overlay==3){
