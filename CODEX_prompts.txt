@@ -1,0 +1,1742 @@
+AI model: GPT-6 (Codex)
+
+1) this folder is going to be our final submission for the hackthon. we re going to add everything in this like in assets and src and include and also mantain the vscode folder and its files. u have to work in meesam branch. i will give u prompt from gpt and then use tht to make as directed
+
+Read SPACE_MISSION_MASTER_PLAN.md carefully and inspect the existing src/main.cpp.
+
+We are building a NASA Space Apps 2026 mission-design game using C++17, raylib and raymath.
+
+Our 11-stage gameplay flow is finalized. Do not change its order.
+
+TASK 1: Build the foundation.
+
+1. Implement navigation between the 11 stages.
+2. Create proper game states and persistent selections.
+3. Implement Mission Selection with Moon unlocked and later missions locked.
+4. Implement Spacecraft Selection with 2–3 fictional spacecraft configurations and clear capacity restrictions.
+5. Add Back, Next and a visible progress indicator.
+6. Make selections visually obvious through animations, highlights and sound where feasible.
+7. Keep the interface readable, interactive, game-like and in a 16:9 layout.
+8. Preserve existing features that already work.
+
+Other stages can temporarily have labeled placeholders until we implement them individually.
+
+STRICT RULES:
+
+- Modify ONLY src/main.cpp.
+- Do not modify or create any other files.
+- Keep everything in one source file.
+- Do not remove existing game logic unnecessarily.
+- Use understandable functions and structs.
+- Keep component values configurable.
+- Clearly identify illustrative game values.
+- Do not invent NASA specifications.
+- Check compilation using the existing project setup if available.
+- Report changes and testing steps.
+
+Do not implement all mission operations, payloads, rockets or launch animations yet. We will do those in separate iterations.
+
+2) Use the plan in README.md
+
+3) i have updated the readme file. update my code accordingly. update main.cpp
+
+4) MISSION: LUNAR RECON — COMPLETE GAME IMPLEMENTATION
+
+You are a senior C++/raylib game developer, creative game director, UI/UX designer, animation programmer, and gameplay systems engineer.
+
+We are building a 2D space mission design game for NASA Space Apps Challenge 2026.
+
+The existing game is functional only as a basic foundation. It looks like business software with cards, labels and forms. We want to transform it into a beautiful, responsive, genuinely interactive space game.
+
+Your task is to implement the complete playable game NOW, not create more placeholder screens or planning documents.
+
+Inspect the current src/main.cpp directly. Do not read README files. Use the specification below as the authority.
+
+1. ABSOLUTE CODING RULES
+
+- Modify ONLY src/main.cpp.
+- Do not modify, create, delete or rename any other file.
+- Do not change configuration, build tasks, README or assets.
+- C++17 + raylib + raymath.
+- Single-file implementation.
+- Structs and functions are allowed. Prefer readable procedural architecture.
+- Reuse working code where sensible, but redesign poor UI and incomplete gameplay.
+- Implement ALL 11 stages, replacing the existing 9-stage system.
+- No placeholder screens, fake buttons or nonfunctional interactions.
+- Use procedural drawing, shapes, gradients, particles, animations and generated sound effects.
+- Load optional fonts already installed on the system, but do not require external assets.
+- Keep it playable on modest integrated graphics.
+- Preserve selections when navigating backward.
+- Implement the complete game loop from Main Menu to Mission Results.
+- Prioritize real gameplay over excessive visual decoration.
+
+The finished result must feel like a polished 2D indie space game, not a website or engineering spreadsheet.
+
+2. VISUAL DIRECTION
+
+Art style
+
+Cute futuristic space exploration + cinematic sci-fi + playful educational game.
+
+Think of the approachable, satisfying, colorful interaction style of Duolingo, combined with beautiful dark space environments and futuristic mission-control instruments.
+
+The game should feel:
+
+- Friendly to beginners.
+- Visually beautiful and atmospheric.
+- Satisfying to click and interact with.
+- Slightly playful but scientifically meaningful.
+- Futuristic, responsive and polished.
+- Immersive, with a sense of the vastness of space.
+
+Avoid:
+- Giant walls of text.
+- Identical rectangular cards everywhere.
+- Tiny technical labels.
+- Overcrowded dashboards.
+- Huge empty panels with small content.
+- Generic corporate UI.
+- Too many unrelated neon colors.
+
+Color palette
+
+Use these colors consistently:
+
+- Background: #081321 — very dark space navy.
+- Panels: #13283B — dark blue.
+- Primary accent: #62E6C9 — soft electric turquoise.
+- Secondary accent: #A78BFA — cosmic lavender.
+- Warning/danger: #FF766E — soft coral.
+- Text: #F1F6FC — slightly warm white.
+- Secondary text: #AABACB — muted blue-gray.
+
+Turquoise means interactive or selected.
+Lavender means scientific information and special features.
+Coral means errors and danger.
+
+Use gold sparingly for achievements and critical warnings. Green may indicate success.
+
+Do not use saturated colors everywhere. Most of the screen should remain dark, so important objects and buttons stand out.
+
+Typography
+
+The existing fonts look bad. Replace the typography system.
+
+Try these fonts in order, checking if each file exists:
+
+For headings:
+1. C:/Windows/Fonts/bahnschrift.ttf
+2. C:/Windows/Fonts/seguisb.ttf
+
+For readable descriptions:
+1. C:/Windows/Fonts/segoeui.ttf
+2. C:/Windows/Fonts/arial.ttf
+
+For numerical telemetry:
+1. C:/Windows/Fonts/consola.ttf
+2. C:/Windows/Fonts/lucon.ttf
+
+Also support existing optional project fonts if found. Fall back safely to raylib's built-in font if none load.
+
+Use these sizes at the 1600×900 virtual resolution:
+
+- Main heading: 54–68 px.
+- Screen heading: 38–46 px.
+- Card heading: 27–32 px.
+- Main explanation: 22–26 px.
+- Button label: 22–26 px.
+- Secondary information: 18–21 px.
+- Numerical telemetry: 24–32 px.
+
+Text must not overflow, clip or overlap.
+
+Prefer short headings and simple sentences.
+
+3. RESPONSIVE GAME INTERFACE
+
+Keep a 1600×900 internal 16:9 design canvas.
+
+Requirements:
+
+- Windowed on startup.
+- F11 toggles fullscreen.
+- Correct scaling and letterboxing.
+- Correct mouse mapping at every resolution.
+- Smooth animations using delta time.
+- Minimum usable window size.
+- ESC opens pause or returns to the previous menu as appropriate.
+- Support mouse interaction throughout.
+- Add keyboard shortcuts where useful.
+- Include Sound ON/OFF and Reduced Motion settings.
+
+Screen layout
+
+Use this general structure:
+
+Top 10%: Small game logo, current mission, compact stage indicator.
+
+Middle 80%: Actual gameplay, large spacecraft, planets, animations and interactive components.
+
+Bottom 10%: Back and Continue buttons, current step, and occasional concise hints.
+
+Do NOT display 11 large labels across the top of every screen.
+
+Instead, use 11 small connected progress dots, highlighting the current stage. Show the stage name prominently in the main content.
+
+Keep the primary subject visually dominant.
+
+For selection screens, use roughly:
+- Left 65% for a large animated visual or playable interaction.
+- Right 35% for choices and essential statistics.
+
+Use responsive spacing and prevent panel overlap.
+
+4. BUILD A REUSABLE GAME UI SYSTEM
+
+Create shared C++ functions for these elements:
+
+Rounded buttons
+Use DrawRectangleRounded and rounded outlines.
+
+Buttons must have:
+- Rounded corners, around 12–18 px visually.
+- Soft shadow.
+- Slight color shift on hover.
+- Smooth scale-up to about 1.03× on hover.
+- Press-down movement of 2–3 px.
+- Brief highlight on click.
+- Animated disabled appearance.
+- Mouse pointer cursor when interactive.
+- Soft hover tick sound once when entering, not continuously.
+- Different click sound for confirming actions.
+- Smooth interpolation rather than instantaneous changes.
+
+Selection cards
+- Small elevation/shadow.
+- Smooth border highlight on hover.
+- A clear SELECTED indicator after clicking.
+- Animated checkmark or small confirmation particle burst.
+- Optional slight scale-up.
+- Disabled cards should still communicate why they are unavailable.
+
+Tooltips
+Implement contextual i icons:
+- Hovering for around 0.25 seconds opens a tooltip.
+- Tooltips have rounded dark backgrounds, readable text and subtle shadows.
+- They must stay inside the screen.
+- They explain the item in simple language.
+- No more than 2–4 short lines plus important statistics.
+- Avoid showing full technical descriptions until requested.
+
+Animated numerical indicators
+- Smoothly interpolate displayed values.
+- Bar colors change when approaching dangerous limits.
+- Numbers briefly pulse when increased or decreased.
+- Display floating +DATA, -POWER, or CREDITS SPENT feedback.
+
+Scene transitions
+Use short fade and slide transitions, around 0.2–0.4 seconds.
+
+Never make transitions block the player unnecessarily.
+
+5. FINAL GAME FLOW — EXACTLY 11 STAGES
+
+STAGE 1 — MAIN MENU
+
+Make this a cinematic introduction, not a form.
+
+Visual layout:
+- Huge animated Moon on the right.
+- Beautiful procedural stars in multiple parallax layers.
+- Small spacecraft floating above the Moon.
+- Soft glow behind the Moon.
+- Occasional shooting star.
+- Large game title on the left.
+
+Buttons:
+- START MISSION
+- HOW TO PLAY
+- SETTINGS
+- EXIT
+
+Use large rounded buttons and satisfying hover effects.
+
+Show one short tagline:
+
+"Build it. Launch it. Bring science home."
+
+The How to Play panel must explain the gameplay in three simple illustrated steps:
+
+DESIGN → LAUNCH → SURVIVE
+
+No large paragraphs.
+
+STAGE 2 — SELECT MISSION
+
+Three destinations:
+- MOON — unlocked.
+- MARS — locked.
+- JUPITER — locked.
+
+Place three beautiful animated planet visuals in space.
+
+The Moon must be much larger or more prominent than the locked destinations.
+
+When hovering over a planet:
+- Slight zoom.
+- Soft glow.
+- Planet name appears.
+- Small descriptive tooltip.
+
+When selecting the Moon:
+- Animate a circular selection ring.
+- Play a confirmation sound.
+- Reveal a concise mission briefing.
+
+Mission objective:
+
+"Orbit the Moon, study its surface, and return valuable observations to Earth."
+
+Mission requirements:
+- At least 10 successful observations.
+- Return at least 70% of required data.
+- Keep critical spacecraft systems operational.
+- Complete the mission within budget.
+
+Use fictional mission credits and clearly label them as game-balance values.
+
+Display only three main statistics initially:
+- Budget
+- Difficulty
+- Science objective
+
+Other information should be accessible through tooltips.
+
+STAGE 3 — SELECT SPACECRAFT
+
+Make this feel like a spacecraft showroom.
+
+Use three selectable spacecraft:
+- Wren — small and inexpensive.
+- Kestrel — balanced.
+- Albatross — larger and expensive.
+
+Each spacecraft must look visibly different.
+
+Do not draw the same satellite three times with different colors.
+
+Use large procedural spacecraft illustrations:
+- Distinct body shapes.
+- Different solar-panel or attachment structures.
+- Mechanical surfaces.
+- Antennas.
+- Highlights.
+- Shadows.
+- Subtle floating animation.
+
+Selecting another spacecraft should animate the current one out and bring the next one into view.
+
+Display only:
+- Payload mass allowance.
+- Component slot count.
+- Cost.
+
+Provide optional details:
+- Power capacity.
+- Destination capability.
+- Crew capacity.
+- Advantages and disadvantages.
+
+Show meaningful trade-offs.
+
+A bigger spacecraft is not automatically better because it consumes more of the mission budget.
+
+Ensure at least two different spacecraft designs can complete the Moon mission with appropriate components.
+
+STAGE 4 — RECRUIT YOUR TEAM
+
+This stage does not currently exist. Implement it.
+
+The Moon mission is robotic, so the specialists work on Earth.
+
+Create cute futuristic crew-character portraits using procedural shapes.
+
+Give each specialist a face, helmet/headset, colored uniform detail and slight idle animation.
+
+Available roles:
+- Engineer — improves troubleshooting options.
+- Scientist — improves analysis of collected observations.
+- Communications Specialist — improves communication recovery and data handling.
+- Software Specialist — helps with onboard computer faults.
+- Doctor — explain that medical personnel are useful for crewed missions but not required for this robotic mission.
+
+Allow players to hire up to three relevant specialists, subject to budget.
+
+Each has:
+- Name.
+- Role.
+- Hiring cost.
+- One gameplay ability.
+
+Example:
+"Engineer: Can attempt a remote solar-panel recovery during a malfunction."
+
+A specialist must affect actual mission-operation choices. Do not make team selection decorative.
+
+When hired:
+- Character moves into a small team roster.
+- A cheerful confirmation sound plays.
+- Budget decreases.
+- A selection ring appears.
+
+Show remaining credits prominently.
+
+STAGE 5 — SPACECRAFT ASSEMBLY / PAYLOADS
+
+THIS IS ONE OF THE MOST IMPORTANT SCREENS.
+
+Do not create a simple list of equipment.
+
+Make it feel like a real spacecraft-building mini-game.
+
+Layout
+
+Left/center:
+A large animated spacecraft in a construction hangar or orbital assembly environment.
+
+Right:
+A compact equipment catalog.
+
+Bottom:
+Mass, power, storage, slots and remaining budget.
+
+Equipment categories
+
+Scientific instruments:
+- Basic lunar camera.
+- Advanced lunar camera.
+- Laser altimeter.
+
+Power systems:
+- Small solar panel.
+- Large solar panel.
+- Battery pack.
+
+Communications:
+- Basic antenna.
+- High-gain antenna.
+
+Additional:
+- Data storage upgrade.
+- Backup system or improved onboard computer.
+
+Use simplified, clearly labelled game-balance values for every component:
+- Cost
+- Mass
+- Power consumption or generation
+- Data generation or capacity
+- Special benefit
+
+Make installation VISUAL
+
+When a player selects equipment:
+1. Highlight an available attachment location.
+2. Show a ghosted preview of the equipment.
+3. Click the slot to install it, or use an Attach button.
+4. Animate the equipment snapping onto the spacecraft.
+5. Play a soft mechanical sound.
+6. Emit a few particles.
+7. Update the spacecraft illustration.
+8. Animate the changed resource numbers.
+
+Every component should have a distinct physical representation.
+
+Examples:
+- Solar panels unfold on the sides.
+- Camera appears on the front with a glowing lens.
+- Antenna extends from the upper body.
+- Battery becomes a visible module.
+- Laser instrument gains a small optical emitter.
+
+Removing equipment should visibly detach it and refund its fictional cost.
+
+Compatibility
+
+Each spacecraft has:
+- Maximum payload mass.
+- Limited equipment slots.
+- Supported power generation and storage options.
+- Available budget.
+
+Invalid placements must be blocked with a gentle red shake and explanation.
+
+A component should not be considered installed just because it is highlighted.
+
+The spacecraft visual MUST reflect the actual installed components.
+
+Educational tooltips
+
+Every component has an i icon.
+
+Example:
+"Camera — Takes pictures of the lunar surface. Needs electricity and produces data that must be stored or sent to Earth."
+
+Advanced tooltips may explain scientific principles and link to NASA references.
+
+Keep the basic explanation beginner-friendly.
+
+STAGE 6 — SELECT ROCKET
+
+Create a visually attractive rocket selection screen.
+
+Three fictional launch options:
+- Budget Launcher.
+- Standard Launcher.
+- Heavy Launcher.
+
+Draw three distinct rockets with different sizes, stages and shapes.
+
+Selecting a rocket should animate its engines briefly and emphasize its size.
+
+Show:
+- Launch cost.
+- Maximum supported spacecraft mass for the lunar mission.
+- Compatible destination.
+
+IMPORTANT:
+Check the actual selected spacecraft's total launch mass, including installed equipment and any modeled consumables, against the rocket's lunar delivery capability.
+
+Do not compare only instrument mass.
+
+Provide simple explanations if a rocket is unsuitable.
+
+Include a compact READY / NOT READY indicator.
+
+STAGE 7 — SELECT ORBIT
+
+Make this an interactive orbital visualization.
+
+Display the Moon prominently in the center.
+
+Draw two or three orbital paths:
+- Low Lunar Orbit.
+- High Lunar Orbit.
+- Optional Polar Lunar Orbit as an inclination choice or separate predefined option.
+
+The player clicks an orbital path.
+
+Animate a small spacecraft following that path.
+
+Show:
+- Observation detail.
+- Coverage opportunities.
+- Simplified communications visibility.
+- Orbit-insertion cost or fuel requirement, if modeled.
+
+Lower lunar orbits generally allow finer spatial detail for a given instrument, while higher orbits offer different coverage trade-offs.
+
+If polar orbit is included, show inclination as a separate property rather than implying altitude and inclination are the same thing.
+
+Use simple language:
+"Closer to the Moon: better surface detail, but different coverage and operational demands."
+
+Show the selected orbit as a glowing trajectory.
+
+Do not pretend the 2D animation is a high-fidelity physical simulation.
+
+STAGE 8 — LAUNCH DATE
+
+Create a small interactive launch calendar.
+
+Use fictional simulated conditions, not actual real-world weather forecasts.
+
+Generate several possible launch dates with:
+- Wind conditions.
+- Lightning risk.
+- Launch readiness.
+- Lunar transfer window suitability.
+
+Use simple symbols:
+- Green = favorable.
+- Orange = caution.
+- Red = unsuitable.
+
+Clicking a date shows a short animated weather preview and explanation.
+
+Example:
+"Strong winds. Delaying the launch is safer."
+
+Bad weather must affect launch eligibility or risk, not only the displayed text.
+
+Include a short pre-launch verification:
+- Spacecraft mass compatible.
+- Required systems installed.
+- Battery and power viable.
+- Rocket compatible.
+- Mission within budget.
+- Launch window suitable.
+
+Critical failures should prevent progression and identify exactly what must be fixed.
+
+STAGE 9 — CINEMATIC LAUNCH
+
+Create a genuine animated launch sequence.
+
+Use a side-view rocket on a launchpad.
+
+Sequence:
+1. Countdown from 5.
+2. Engine ignition.
+3. Flame and smoke generation.
+4. Liftoff.
+5. Camera shake.
+6. Rocket acceleration.
+7. Stage separation.
+8. Spacecraft deployment.
+9. Simplified lunar-transfer visualization.
+10. Lunar orbit arrival.
+
+Use procedural particle effects, smoke, flames and camera movement.
+
+The rocket should move smoothly through the environment.
+
+Add short status messages:
+"IGNITION"
+"LIFTOFF"
+"STAGE SEPARATION"
+"LUNAR TRANSFER"
+"ORBIT INSERTION COMPLETE"
+
+Use procedural audio for:
+- Countdown ticks.
+- Engine rumble.
+- Separation.
+- Mission milestone.
+
+Provide a SKIP button.
+
+Do not simulate actual launch physics beyond the simplified gameplay model.
+
+STAGE 10 — MISSION OPERATIONS
+
+THIS MUST BE THE MAIN GAMEPLAY LEVEL, NOT AN ANIMATED DASHBOARD.
+
+The player must actively control a lunar reconnaissance mission.
+
+Visual environment
+
+- Huge animated Moon.
+- Spacecraft visibly orbiting it.
+- Slowly moving background stars.
+- Day/night lighting approximation.
+- Visible scientific scanning beam.
+- Communication pulses toward Earth.
+- Floating data packets.
+- Small visual effects during anomalies.
+
+Main controls
+
+Create three highly interactive controls:
+
+CAMERA
+- ON/OFF.
+- Collects observations.
+- Consumes power.
+- Produces data.
+- Works only under suitable operating conditions.
+
+TRANSMIT
+- ON/OFF.
+- Sends stored data toward Earth.
+- Requires a communication window and available power.
+- Animates outgoing radio waves or data packets.
+
+POWER MODE
+- SCIENCE: prioritize observations.
+- BALANCED: normal operation.
+- SAFE: shut down nonessential instruments and preserve power.
+
+These must be actual working gameplay controls, with meaningful trade-offs.
+
+Core dynamic resources
+
+Display four large readable indicators:
+- Battery percentage.
+- Data storage percentage.
+- Returned science.
+- Spacecraft health.
+
+Also display:
+- Current mission time.
+- Earth communication availability.
+- Current operational state.
+
+Numbers and bars must change during gameplay.
+
+Simplified scientific simulation
+
+Implement consistent calculations using delta time and an accelerated mission clock.
+
+Power:
+- Solar panels generate electricity in sunlight.
+- Batteries store surplus energy.
+- Instruments consume power.
+- Lunar eclipses temporarily prevent solar generation.
+- Low power forces equipment shutdown or causes consequences.
+
+Data:
+- Active instruments produce observations.
+- Data enters limited onboard storage.
+- When storage is full, new observations cannot be saved.
+- Data can be transmitted only when the Earth link is available and the radio is operating.
+- Returned data contributes to the mission science score.
+
+Communications:
+- Approximate line-of-sight communication opportunities around the Moon.
+- Show the satellite passing behind the Moon.
+- During this period, show SIGNAL LOST.
+- When communication returns, animate the transmission beam.
+
+Use consistent units and calculations. Do not treat power in watts and battery energy in watt-hours as identical.
+
+Random mission events
+
+Implement at least five playable anomalies:
+
+A. Solar power shortage
+Choices:
+- Stop science collection.
+- Enter safe mode.
+- Continue observations at increased risk.
+
+B. Communications malfunction
+Choices:
+- Attempt remote recovery.
+- Use backup communications if installed.
+- Store data and wait for another contact window.
+
+C. Camera overheating
+Choices:
+- Pause the instrument.
+- Reduce duty cycle.
+- Continue with increased damage risk.
+
+D. Storage nearly full
+Choices:
+- Stop collection.
+- Prioritize existing data.
+- Transmit during the next valid contact window.
+
+E. Attitude-control malfunction
+Choices:
+- Attempt recalibration.
+- Suspend observations.
+- Request specialist-supported recovery.
+
+Meaningful team effects
+
+If the Engineer was hired, they can offer a better troubleshooting action.
+
+If the Communications Specialist was hired, communication recovery is improved.
+
+If the Scientist was hired, science-data prioritization is more effective.
+
+If the Software Specialist was hired, certain control faults have better recovery options.
+
+Missing specialists must not make every mission impossible. Instead, their absence should reduce available solutions or increase risk.
+
+Events must feel dramatic
+
+When an anomaly occurs:
+- Brief red warning flash.
+- Short alarm sound.
+- Small screen shake.
+- A clear overlay with the problem.
+- Two or three large decision buttons.
+- A visible consequence after choosing.
+
+Do not immediately end the mission for minor problems.
+
+Player choices must affect the mission state and later events.
+
+Player learning
+
+When an event happens, provide an optional short tip:
+
+"Why this matters: spacecraft depend on batteries when solar panels cannot generate energy."
+
+After the player makes a choice, briefly explain the result.
+
+No giant instructional paragraphs.
+
+The player should learn through doing, not through reading a textbook.
+
+Mission length
+
+Aim for a playable operation phase of approximately 90–150 real seconds, with an accelerated in-game mission clock.
+
+Allow pause, replay and speed controls where practical.
+
+Create a successful outcome and several meaningful failure outcomes.
+
+STAGE 11 — MISSION RESULTS
+
+Make the result screen feel like the end of an actual video game level.
+
+Display:
+- Mission grade: S, A, B, C or F.
+- Large animated medal.
+- Total science observations.
+- Successfully returned data.
+- Spacecraft health.
+- Budget efficiency.
+- Mission requirements completed.
+
+Use an animated score reveal.
+
+Scoring example:
+- Science returned: 40 points.
+- Mission requirements: 25 points.
+- Spacecraft survival: 20 points.
+- Budget efficiency: 15 points.
+
+Clearly describe this as a fictional educational scoring system.
+
+Show one major success and one improvement tip.
+
+Example:
+"Your camera captured valuable observations, but limited communications prevented much of the data from reaching Earth."
+
+Buttons:
+- RETRY MISSION
+- REDESIGN SPACECRAFT
+- MAIN MENU
+
+Retry must work. Redesign must return to spacecraft assembly with previous selections preserved.
+
+6. ADD ACTUAL GAME FEEL THROUGHOUT
+
+Every important action must produce feedback.
+
+Examples:
+
+Installing solar panels:
+- Mechanical snapping sound.
+- Panel-unfolding animation.
+- Power indicator increases.
+- Tiny floating +POWER label.
+
+Removing a camera:
+- Camera detaches visually.
+- Budget adjusts.
+- Science capacity decreases.
+
+Selecting a team member:
+- Character portrait reacts.
+- Confirmation chime.
+- Team slot fills.
+
+Selecting an invalid rocket:
+- Rocket card shakes.
+- Coral warning briefly flashes.
+- A simple reason appears.
+
+Collecting lunar data:
+- Camera lens pulses.
+- Scanning light travels toward the Moon.
+- Tiny data particles return to the spacecraft.
+- Storage value increases.
+
+Transmitting data:
+- Antenna activates.
+- Communication waves travel toward Earth.
+- Storage decreases.
+- Science returned increases.
+
+Entering lunar eclipse:
+- Solar panels dim.
+- Battery meter begins decreasing.
+- A short warning appears.
+
+These are essential gameplay-feedback requirements, not optional decorations.
+
+7. MAKE THE GAME EDUCATIONAL USING NASA RESOURCES
+
+Use these official references as the scientific foundation:
+
+NASA — Design and Develop Science Missions:
+https://www.nasa.gov/wp-content/uploads/2025/04/250323-design-and-develop-science-mission.pdf
+
+NASA — CubeSat 101:
+https://www3.nasa.gov/sites/default/files/atoms/files/nasa_csli_cubesat_101_508.pdf
+
+NASA — Mission Design Lab:
+https://etd.gsfc.nasa.gov/capabilities/integrated-design-center/mission-design-lab/
+
+NASA — Mission Viz:
+https://nasa.github.io/mission-viz/
+
+NASA — Lunar Reconnaissance Orbiter:
+https://science.nasa.gov/mission/lro/
+
+Incorporate these concepts:
+- Mission requirements and verification.
+- Mass and equipment limitations.
+- Power and battery management.
+- Scientific instrument selection.
+- Communications and ground control.
+- Engineering trade-offs.
+- Meaningful mission operations.
+
+Use small optional educational insight panels.
+
+Example:
+
+"NASA INSIGHT: Lunar spacecraft may lose direct communication with Earth when the Moon blocks the signal."
+
+Show which NASA resource supports the concept.
+
+Clearly separate:
+- Real scientific principles.
+- Simplified engineering calculations.
+- Fictional gameplay values.
+
+Do not invent NASA component specifications or claim the fictional mission uses a verified NASA spacecraft design.
+
+8. IMPORTANT: GAME BALANCE
+
+Make the game genuinely strategic.
+
+There must be at least:
+- Two different viable spacecraft builds.
+- Multiple payload combinations.
+- Different team compositions with consequences.
+- A meaningful reason to select different rockets and orbits.
+- At least three possible operational strategies.
+- Good and bad outcomes based on player choices.
+
+Avoid one obviously perfect combination.
+
+The game should reward planning, not merely buying the most expensive components.
+
+Test whether a low-cost design can succeed with careful operation and a high-cost design can still fail when operated poorly.
+
+9. CODE QUALITY AND RELIABILITY
+
+Preserve a clean structure inside main.cpp.
+
+Suggested logical sections:
+1. Constants and shared types.
+2. Fonts, UI colors and layout.
+3. Procedural audio.
+4. Button and tooltip system.
+5. Rendering and particles.
+6. Mission configuration data.
+7. Spacecraft and payload data.
+8. Team and rocket data.
+9. Game-state management.
+10. Simulation and scoring.
+11. Individual screen update/draw functions.
+12. Input and scene navigation.
+13. Main loop.
+
+Separate update logic from drawing where practical.
+
+Important:
+- Do not allow one click to activate multiple controls.
+- Do not allow double navigation during transitions.
+- Do not let selected payloads exceed capacities.
+- Do not allow invalid builds to launch.
+- Do not allow negative battery or storage values.
+- Do not lose player selections when going Back.
+- Avoid allocating large amounts of memory each frame.
+- Prevent audio from playing repeatedly while the mouse remains over a button.
+- Ensure fonts, render textures and sounds are unloaded correctly.
+
+Use delta time consistently.
+
+10. ACCEPTANCE TESTS
+
+Before considering the task finished, verify:
+
+1. Game launches without errors.
+2. Every stage is accessible in the correct order.
+3. Every visible button works.
+4. Back and Next preserve selections.
+5. Mission selection works.
+6. Three spacecraft can be inspected.
+7. Team hiring changes budget and mission options.
+8. Payloads visibly attach to the spacecraft.
+9. Payload resource totals are calculated correctly.
+10. Invalid designs are rejected with explanations.
+11. Rocket selection affects mission readiness.
+12. Orbit and launch-date choices have consequences.
+13. Launch animation plays and can be skipped.
+14. Instruments actually collect data.
+15. Data can only be transmitted during valid communication windows.
+16. Battery changes based on real consumption and generation.
+17. Random events affect the actual simulation.
+18. The selected team changes some event solutions.
+19. Results reflect actual player performance.
+20. Retry and redesign work.
+21. No text overlaps or is clipped.
+22. Fullscreen and window resizing work.
+23. Sound ON/OFF works.
+24. The game runs smoothly on modest hardware.
+
+Compile with the project's existing Windows MinGW/raylib setup.
+
+Use C++17. Fix compile errors before finishing.
+
+11. DEVELOPMENT PRIORITY
+
+Implement in this order:
+
+FIRST: Correct 11-stage game state, shared navigation and functional data structures.
+
+SECOND: Fully working team selection, spacecraft builder, payload installation, rocket selection and engineering verification.
+
+THIRD: A fully functional mission-operations simulation, interactive controls, events, resources and scoring.
+
+FOURTH: Launch animation, orbital visualization and result screen.
+
+FIFTH: Visual refinement, fonts, rounded buttons, shadows, procedural audio, particles, transitions and responsive layout.
+
+The complete playable loop is more important than spending all available effort on the menu.
+
+Do not stop after making a polished menu.
+
+FINAL INSTRUCTIONS
+
+Implement this directly in src/main.cpp.
+
+Do NOT ask me to write assets, create additional source files, change README or make architectural decisions for you.
+
+Make reasonable design decisions and proceed.
+
+Do not substitute placeholder screens for actual gameplay. If complexity forces simplification, simplify the artwork or number of options before eliminating any of the 11 functional stages.
+
+The result should feel like an actual small, polished, educational indie game with a complete beginning, middle and end.
+
+The core philosophy: SHOW the player what happens, make them INTERACT with it, and TEACH them why it happened.
+
+After implementation, provide only:
+1. A short summary of completed features.
+2. Any genuine limitations.
+3. Compilation/test results.
+4. Any remaining bugs.
+
+Remember: ONLY MODIFY src/main.cpp.
+
+5) i have added a keeny ui folder in assets. view it replace your ui ux witht that. be simple and replace all with it.
+
+6) what is the screen size of our game?
+
+7) \*i have updated the readme file read it and see the new changes moreover see the assets folder i have added alot of things. and now we need to organize our work and divide it into different files fo rur ease if it is and also it might decrease the token use. NOW DONT CHANGE THE README FILE AND ASSETS FOLDER. u may update the folder now accordingly. add new things discard old things. check all the things. use some color to make it gamify.
+
+8) feedback: the game is still not applying the things i mentioned like the select mission screen isnt good and the spaceship look very bad and simple. maybe a better design would worl. the payload doesnt have the scroll bar it will be good with tht. the date select thing is not tht cool. make it real calender and dates and weather. like fake data but real calender. the time etc isnt shown tht great. i guess i should makee a algorithm for accurate data. the costs should be in dollars. the design of report is very vague and simple. do some cool formatting. the use of red color is very less. use it foor warnings etc. color theory is very important. also i m thinking to shift the color palete of overall game to orange and black rather than this blue cuz everyone have this. update readme file and the code accordingly with my feedback.also use the sounds from assets for the things now. i have also added a info.png icon in icon folder of assets.
+
+9) follow the following steps and implement and solve issues i mentio in the text
+
+CODEX TASK — Final UI/UX Polish & Personalization
+
+Our game Dead Coders: Space Mission is now working well. The current layout, spacecraft artwork, mission simulation, and report system are good.
+
+I have attached screenshots showing the current UI.
+
+Your job is to polish the existing game, NOT redesign it.
+
+Read README.md and follow my original handwritten storyboard. Those drawings are the main reference for the screen layouts.
+
+Keep changes focused on src/main.cpp, reusing existing assets, functions, and UI elements wherever possible.
+
+1. New Color Palette
+
+Update the game's UI colors to:
+Color - Hex - UsageDark navy - #0F1B26 - Backgrounds, dark panels
+Warm cream - #F5E8D1 - Main text, soft highlights
+Teal - #20A5A6 - Selected, active, success
+Coral - #DD5639 - Main actions, warnings, errors
+Use lighter and darker shades of these colors where necessary.
+
+Important:
+- Preserve the existing UI layout, shapes, shadows, and Kenney button style.
+- Keep the general dark-space atmosphere.
+- Replace the existing bright orange accents with suitable coral/teal accents.
+- Do not recolor the spacecraft, planets, Moon, or other realistic space artwork.
+- Keep enough contrast for every label and button.
+- Avoid applying all four colors equally everywhere. Establish a clear visual hierarchy.
+
+2. Mission Selection — Expand on Hover
+
+I want a smooth interaction similar to an animated HTML/CSS hover card.
+
+Initially, show all three mission cards:
+
+Moon - Mars - Jupiter
+
+When the mouse hovers over a mission:
+
+1. The hovered mission smoothly expands into a larger card.
+2. The other two mission cards fade or slide out of the way.
+3. The expanded card displays the mission illustration, title, difficulty, objective, and a few exciting details.
+4. Text and image remain properly aligned inside the expanded card.
+5. When the cursor leaves, all three cards smoothly return to their original layout.
+
+Suggested animation duration: approximately 0.25–0.35 seconds using interpolation.
+
+Avoid flickering when moving the cursor between the original card and its expanded area.
+
+Mission descriptions
+
+Use short, exciting text instead of generic paragraphs.
+
+LUNAR RECON — EASY
+
+"Explore our closest celestial neighbor."
+
+- Objective: Observe the lunar surface and return scientific data.
+- Challenge: Manage power, equipment, and communications.
+- Reward: Complete your first space mission.
+
+MARS EXPLORATION — LOCKED
+
+"Discover the secrets of the Red Planet."
+
+- Challenge: Long-distance communication and limited resources.
+- Difficulty: Medium.
+- Coming in a future mission.
+
+JUPITER EXPEDITION — LOCKED
+
+"Venture into the giant planet's dangerous environment."
+
+- Challenge: Radiation, distance, and power management.
+- Difficulty: Hard.
+- Coming in a future mission.
+
+Use concise copy, small icons, and highlighted keywords. Do not overcrowd the card.
+
+Do not unlock or implement Mars/Jupiter gameplay. Their expanded cards are previews only.
+
+3. Improve Information Tooltips — Important
+
+The current i icons look excellent, but their information is not helpful enough.
+
+There is also a rendering issue: text behind the tooltip remains visible, making the tooltip difficult to read.
+
+Fix the tooltip system
+
+When the player hovers over or clicks an information icon:
+
+- Draw a solid or almost-opaque dark rectangular panel.
+- Give it a thin teal border, subtle shadow, and comfortable padding.
+- Draw the information text INSIDE the rectangle.
+- Render the popup above all background text and buttons.
+- Use proper line wrapping and spacing.
+- Keep it within the screen boundaries.
+- Make sure no underlying text shows through.
+- Close it when the cursor leaves, or when clicking elsewhere if it was opened by clicking.
+
+Use one reusable tooltip component rather than separate implementations for every screen.
+
+Information content
+
+Make the information educational, practical, and interesting.
+
+Where possible, use the NASA CubeSat 101 (2017) research documentation as the factual reference.
+
+Examples:
+
+SOLAR PANELS
+
+"Solar panels generate electricity from sunlight. When the spacecraft enters shadow, its battery must provide power."
+
+BATTERY
+
+"Batteries store energy for periods when solar power is unavailable. More battery capacity helps the spacecraft survive longer without sunlight."
+
+ANTENNA
+
+"A spacecraft uses its communication system to exchange commands and scientific data with Earth."
+
+PAYLOAD
+
+"A payload is equipment carried to perform a mission task. Every instrument adds mass and may require electrical power."
+
+MASS LIMIT
+
+"A spacecraft must meet the mass limits of its launch system. Extra equipment can make a design incompatible."
+
+PRE-LAUNCH TESTING
+
+"Real CubeSats undergo checks and environmental testing, including vibration tests, before launch."
+
+Research and hackathon presentation
+
+This is important for our NASA hackathon pitch.
+
+- Use real engineering principles from NASA CubeSat 101.
+- Explain how each principle affects the player's choices.
+- Add a small source label in relevant detailed information panels: Based on NASA CubeSat 101 (2017).
+- Do not pretend fictional gameplay costs, success percentages, or mission events are official NASA data.
+- Do not add lengthy research articles or new research screens.
+
+The goal is scientific learning through game decisions, not reading documentation.
+
+4. Payload Screen — Better Checklist
+
+The current READINESS panel contains plain text, which looks unfinished.
+
+Redesign only its internal content while preserving its general position and dimensions.
+
+Checklist section
+
+Create a distinct heading:
+
+MISSION READINESS
+
+Display each requirement with an actual visual checkbox or status icon.
+
+Examples:
+
+- [✓] Science instrument — green when installed.
+- [✓] Communication antenna — green when installed.
+- [✓] Battery — green when installed.
+- [✓] Sufficient solar power — green when requirements are satisfied.
+
+Before completion, show an empty checkbox or cross and red/coral text.
+
+When a requirement is satisfied:
+- Animate the checkbox.
+- Change its label to teal/green.
+- Optionally play a subtle confirmation sound.
+
+Use the actual spacecraft configuration to update these states.
+
+Separate the statistics
+
+Under the checklist, draw a thin divider.
+
+Add a heading:
+
+SPACECRAFT STATS
+
+Show:
+- Payload mass / capacity.
+- Slots used / available.
+- Power used / generated.
+- Battery capacity.
+- Storage capacity.
+
+Make these neatly aligned and visually distinct from the readiness checklist.
+
+Do not use a long block of undifferentiated text.
+
+Payload quantity indicator
+
+Currently, every payload row contains text such as INSTALLED 0.
+
+Remove this text.
+
+Instead, display the installed quantity as a small badge above or at the upper-right corner of that payload's + button.
+
+Rules:
+- Quantity 0: Show no badge.
+- Quantity 1: Show 1.
+- Quantity 2: Show 2.
+- Continue updating the badge when components are added or removed.
+- Keep the + button clearly visible and clickable.
+- Do not change existing installation limits or calculation logic.
+
+The spacecraft drawing must remain unchanged when payloads are installed. Only the UI, statistics, checklist, and actual gameplay state should update.
+
+5. Make COST Prominent
+
+The mission cost is one of the most important parts of gameplay, but it is currently too small and easy to ignore.
+
+Improve the existing top COST indicator.
+
+Appearance
+
+- Make it slightly larger.
+- Give it a clear bordered container.
+- Use readable bold text.
+- Emphasize the spent amount.
+- Keep the total budget visible.
+
+Example:
+
+COST  $380 / $1,200
+
+Use the existing cost-calculation system.
+
+When purchasing a payload
+
+- Briefly pulse the cost container.
+- Animate the displayed amount to its new value.
+- Optionally display a small +$60 floating near the COST indicator.
+- Play the existing assets/sound/payloadadded.wav.
+
+When removing a payload, animate the decrease appropriately.
+
+When installation fails
+
+For example, insufficient budget, payload capacity, or slots:
+
+- Briefly shake the affected panel or the screen very slightly.
+- Flash a coral outline.
+- Play assets/sound/error sound.mp3.
+- Display a short explanation such as NOT ENOUGH SLOTS.
+
+Keep the effect subtle and quick. Do not shake the camera violently.
+
+Preserve the existing budget and payload restrictions.
+
+6. Improve Button Feedback
+
+The buttons currently look good, but active and inactive states are not visually distinguishable enough.
+
+Keep the existing Kenney UI button shapes and general styling.
+
+Improve their color states:
+
+- Normal: Neutral dark/cream style.
+- Hover: Slightly brighter with a subtle highlight.
+- Selected/active: Teal or another strong contrasting accent.
+- Primary action: Coral.
+- Disabled: Desaturated, clearly unavailable.
+- Error: Brief coral flash/shake.
+
+For example, during Mission Operations:
+
+- If speed is ×1, the ×1 state should be visibly active.
+- If speed changes to ×3, the button clearly updates.
+- If speed changes to ×5, the selection must be obvious.
+- PAUSE should visibly change to RESUME when paused.
+- SCIENCE ON/OFF and TRANSMIT ON/OFF need clearly different states.
+
+Do not rely on text changes alone.
+
+Use a consistent selection style across every screen.
+
+7. Make Page Headings More Prominent
+
+The current headings such as SPACECRAFT ASSEMBLY, MISSION OPERATIONS, and MISSION RESULTS do not stand out enough.
+
+Use the fonts already in assets/font/.
+
+Recommended typography:
+
+- Liquidnight: Main game title on the Start Screen.
+- Polaris Bold: Main screen headings.
+- Polaris Semibold: Section headings, important buttons.
+- Polaris Regular: Normal UI text, descriptions, statistics.
+- Tigreal Rough: Mission report document text. Preserve this requirement.
+
+For page headings:
+
+- Increase their size slightly.
+- Use bold lettering.
+- Add subtle text shadows for depth.
+- Improve spacing above and below.
+- Ensure sufficient contrast against the background.
+
+Keep report text in Tigreal Rough, but maintain readability and line spacing.
+
+Don't use decorative fonts for tiny numbers, timers, or technical stats.
+
+Text hierarchy
+
+Each screen should clearly communicate:
+
+1. What screen am I on?
+2. What should I look at?
+3. What action should I take?
+
+Improve spacing, alignment, highlighting, and readability.
+
+For warning text, emphasize the important phrase in coral. Use teal for successful conditions and cream for normal text.
+
+Support selective underlines or highlighted keywords where useful, without making every label colorful.
+
+8. Add My Custom Cursor
+
+I have added:
+
+assets/cursor/cursor.png
+
+The image is 32 × 32 pixels.
+
+Use it as the custom mouse cursor.
+
+Requirements:
+- Hide the default Windows cursor while it is over the game.
+- Draw my cursor texture above the UI.
+- Keep it correctly aligned with the mouse position.
+- Account for virtual canvas scaling, letterboxing, and fullscreen.
+- Avoid drawing two cursors.
+- Keep the cursor crisp and readable.
+- Restore the system cursor when exiting.
+- If the asset fails to load, keep the default cursor visible.
+
+Do not replace my cursor with a procedural drawing.
+
+9. General UI Polish
+
+Look at the screenshots and improve visual hierarchy without rebuilding the game.
+
+- Keep the same screen layouts.
+- Reduce unnecessarily empty areas only when doing so improves readability.
+- Align labels, buttons, and numeric values.
+- Improve section separation.
+- Use consistent spacing and padding.
+- Preserve the existing rounded panels and button assets.
+- Ensure text does not overlap panels.
+- Ensure all hover panels and popups stay inside the visible window.
+- Use smooth but short transitions.
+- Do not add excessive glow, particles, or animation.
+
+The game should feel polished, warm, playful, and futuristic rather than robotic.
+
+10. Important Restrictions
+
+DO NOT:
+- Redesign the spacecraft. Its current design is excellent.
+- Recolor the spacecraft, planets, Moon, or scientific imagery.
+- Change the core gameplay.
+- Rewrite the mission simulation.
+- Change payload values, limits, or scoring unnecessarily.
+- Break the report archive or saved reports.
+- Remove existing audio.
+- Introduce new libraries.
+- Create a completely new UI framework.
+- Modify unrelated files unnecessarily.
+- Replace the handwritten storyboard's layouts with a generic dashboard.
+- Add complicated minigames.
+
+Work with the current code and reuse existing components.
+
+11. Implementation Order
+
+Please implement in this order:
+
+1. Global color palette and stronger heading typography.
+2. Improved button states and prominent COST display.
+3. Payload checklist, section separation, and quantity badges.
+4. Reusable information tooltip system with accurate educational content.
+5. Expanding mission-selection hover cards.
+6. Custom cursor.
+7. Final spacing, readability, and responsiveness pass.
+
+Compile and check the game after the changes.
+
+Final Goal
+
+I want the existing game to become more polished and personalized, not fundamentally different.
+
+The player must immediately understand:
+- What is selected.
+- What is missing.
+- What costs money.
+- Why something failed.
+- What to click next.
+- What real space-engineering principle they are learning.
+
+The game should be visually appealing, easy to navigate, and impressive in a NASA Space Apps Challenge demonstration.
+
+Please implement these changes directly in the existing game. Preserve everything that already works, especially the spacecraft artwork and gameplay.
+
+10) do these as dircted. dont be too robotic. keep the game feel and overall ux good. like cool scifi GAME. learning. dont change the ui ux alot now only do the mentioned changes. the current version is perfect just few changes mentioned in txt are assets, report, and icons and menu page tweaks. start
+
+CODEX — Final Mission Report + Main Menu Polish
+
+Our C++17/raylib game Dead Coders: Space Mission is working. Improve the Mission Report system and Main Menu using the existing code. Do not rewrite the game or change unrelated screens.
+
+Read README.md and preserve the handwritten storyboard's design direction.
+
+1. Mission Report — Research Paper Design
+
+Redesign the report to resemble a polished, vintage scientific research dossier rather than a plain text document.
+
+Keep the existing cream paper background, dark header, and scrollable report.
+
+Improve it with:
+- Tigreal Rough for report body text.
+- Polaris Bold for section headings.
+- Proper margins, paragraph spacing, and line wrapping.
+- Clear section headings, thin dividers, page numbers, and subtle paper texture.
+- Small decorative elements such as a paper clip, document stamp, or reference labels. Draw these using simple raylib shapes; no extra assets needed.
+- Highlight important results, numbers, and decisions.
+- Keep the report readable and avoid excessive decoration.
+
+The report must look like an actual mission investigation document.
+
+2. Report Must Reflect Player Decisions
+
+This is the most important change.
+
+Currently, the report is too generic. Generate its content from the actual mission state and event history.
+
+The report should explain what the player chose, what happened, and how those decisions affected the mission.
+
+Include these sections:
+
+A. Mission Verdict
+- Prominent SUCCESS / PARTIAL SUCCESS / FAILURE stamp.
+- Overall grade: S, A, B, C, D, or F.
+- Final score / 100.
+- Brief explanation of why the mission received that grade.
+
+B. Mission Configuration
+- Selected spacecraft and its capabilities.
+- Ground team members.
+- Installed payloads and quantities.
+- Total mass, slots, power, battery, and storage.
+- Rocket, orbit, launch date, and weather.
+- Final cost against the budget.
+
+C. Mission Timeline
+- Launch and deployment.
+- Science observations.
+- Communication events.
+- Random emergencies.
+- Player responses.
+- Mission completion or failure.
+
+Use timestamps where available.
+
+D. Decisions & Consequences
+
+For every important decision, clearly explain:
+
+DECISION → REASON → ACTION → RESULT → IMPACT
+
+Example:
+
+"During a power shortage, the player switched to Power Saving Mode. This reduced energy consumption and helped preserve battery power, but scientific observations slowed down."
+
+Another example:
+
+"A communication fault occurred. The player contacted the communications engineer, restoring the connection after a short delay. Some transmission time was lost."
+
+Do not invent actions or claim the player solved problems they ignored.
+
+If the player failed to respond, describe the consequences.
+
+E. Scientific Results
+- Observations completed.
+- Data collected, stored, and successfully transmitted.
+- Science objectives achieved or missed.
+- Relevant scientific images, if eligible.
+
+F. Final Evaluation
+- What worked well.
+- What caused problems.
+- What could be improved on the next attempt.
+
+Use simple, clear English. Avoid repetitive generic sentences.
+
+3. Report Grade System
+
+Make the grade a meaningful gameplay reward.
+
+Use the existing simulation results and scoring where possible.
+
+Suggested factors:
+- Mission objective completion.
+- Scientific data successfully returned.
+- Spacecraft survival.
+- Successful handling of emergencies.
+- Resource management.
+- Budget efficiency.
+
+Do not reward the player for simply purchasing expensive equipment.
+
+Show a large grade and verdict near the beginning of the report.
+
+Example:
+
+MISSION SUCCESS — GRADE A — 87/100
+
+Below it, explain the major reasons for the score.
+
+A failed mission must not receive a high grade simply because it had expensive equipment.
+
+Use deterministic scoring based on recorded results, not random grades.
+
+4. Scientific Images — CSV Integration
+
+I have added:
+
+assets/moon/image_details.csv
+
+Columns:
+
+filename,title,description
+
+The file contains metadata for 1.jpg through 6.jpg in assets/moon/.
+
+Read the CSV and display images with their corresponding titles and descriptions.
+
+Important image eligibility rules
+
+Images must depend on the player's payload choices.
+
+- If NO camera or imaging instrument was installed, show NO image gallery.
+- If a camera was installed but no relevant observations were completed or returned, show no scientific image gallery.
+- If a suitable camera was installed and science data was successfully returned, show eligible reference images.
+- A better camera may allow more image entries, but only if justified by the existing payload capabilities.
+- Do not display all six images automatically.
+
+Use the existing mission science and transmission values to determine eligibility.
+
+These are NASA reference images, not actual photographs taken by the player's fictional spacecraft.
+
+Label the section:
+
+LUNAR REFERENCE IMAGERY
+
+Add a small note explaining that the images illustrate relevant lunar features and are not simulated mission captures.
+
+For each image:
+- Display the image neatly within the paper.
+- Show its title.
+- Show its description using Tigreal Rough.
+- Maintain its aspect ratio.
+- Add a subtle image border or caption.
+- Skip missing images safely.
+
+Use proper CSV parsing, including quoted commas in descriptions.
+
+5. Save Complete Mission Reports
+
+Preserve and improve the existing report archive.
+
+Each completed mission should save a report containing:
+- Unique report ID.
+- Mission date/time.
+- Spacecraft and configuration.
+- Grade, score, and verdict.
+- Mission events and player decisions.
+- Final statistics.
+- Eligible image references.
+
+Reports must remain accessible after restarting the game.
+
+Save the generated report data, not just a reference to the latest mission state.
+
+The archive should allow selecting and reopening previous reports.
+
+Preserve existing reports where possible.
+
+6. New Character Icons
+
+New assets have been added for the team-selection screen:
+
+doctor.png
+engineer.png
+scientist.png
+pilot.png
+info.png
+
+They are 400 × 400 PNG images.
+
+Find them in the existing assets folders.
+
+Use the corresponding icons for each role in Team Selection.
+
+- Preserve aspect ratio.
+- Use transparent backgrounds correctly.
+- Scale them consistently.
+- Keep selection highlights clear.
+- Use info.png for relevant information buttons if appropriate.
+- Do not replace the existing team-selection logic.
+
+7. Main Menu — Final Visual Changes
+
+These changes apply ONLY to the Main Menu / Start Screen.
+
+Background
+
+Use:
+
+assets/background/background.png
+
+as the main menu background.
+
+Scale/crop it appropriately to fill the screen without distortion.
+
+Do not use this background on other screens.
+
+Earth illustration
+
+Use:
+
+assets/background/earth.png
+
+Resolution: 612 × 612.
+
+Place it at the bottom-right corner as a decorative foreground element.
+
+Preserve aspect ratio and allow natural clipping at the screen edges.
+
+It should not overlap the main menu buttons.
+
+Main menu buttons
+
+Make the existing menu buttons larger and easier to notice.
+
+Keep the existing Kenney UI styling and hover effects.
+
+The main menu should contain:
+
+- PLAY
+- PAST MISSIONS
+- SETTINGS
+- INFO
+
+Rename the existing Archive button to PAST MISSIONS.
+
+It must still open the existing saved-report archive.
+
+Remove from Main Menu ONLY
+
+- Top progress indicator.
+- Top COST display.
+- Spacecraft shadow.
+
+Do not remove progress or cost displays from gameplay screens.
+
+Preserve the main title, its font, and the overall menu layout.
+
+Keep the menu simple, attractive, and visually balanced.
+
+8. Implementation Rules
+
+- Modify existing functions rather than rebuilding the project.
+- Prefer changes in src/main.cpp.
+- Reuse existing fonts, UI components, sounds, and assets.
+- Keep C++17/raylib compatibility.
+- Do not change the spacecraft artwork.
+- Do not change the Moon visualization.
+- Do not modify unrelated gameplay.
+- Do not introduce unnecessary dependencies.
+- Handle missing assets safely.
+- Keep text inside panel boundaries.
+- Preserve fullscreen and scaling behavior.
+
+Priority order
+
+1. Decision-based report generation and grading.
+2. Scientific image eligibility and CSV integration.
+3. Research-paper formatting.
+4. Persistent report archive.
+5. Main menu changes.
+6. Team icons.
+
+Compile and test after implementation.
+
+Final goal: Every mission should produce a unique, attractive scientific report that reflects the player's actual decisions, achievements, mistakes, and consequences. The report should feel like a reward for playing, not a generic statistics page.
+
+11) UPDATE TH README FILE

@@ -2,7 +2,7 @@
 int main(int argc,char** argv){
     using namespace mission;
     SetConfigFlags(FLAG_WINDOW_RESIZABLE|FLAG_VSYNC_HINT|FLAG_MSAA_4X_HINT);
-    InitWindow(1280,720,"Mission: Lunar Recon");
+    InitWindow(1280,720,"DEAD CODERS Space Mission");
     if(!IsWindowReady())return 1;
     SetWindowMinSize(960,540);
     SetExitKey(KEY_NULL);
