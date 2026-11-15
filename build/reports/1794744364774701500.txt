@@ -1,0 +1,65 @@
+LUNAR MISSION / PARTIAL SUCCESS
+Report ID: 1794744364774701500 / 2026-11-15 12:06:04 UTC
+
+MISSION VERDICT
+GRADE D / 54 out of 100
+Some science reached Earth, but one or more targets were missed.
+Grade balances returned science, objectives, survival and budget efficiency. Failed missions are capped below 40; partial missions below 70.
+
+MISSION CONFIGURATION
+Ship: Scout
+Ground team: Engineer; Scientist; Pilot; 
+Payloads:
+  Lunar camera x1
+  Small solar panel x1
+  Battery pack x1
+  Basic antenna x1
+Rocket: Budget Launcher
+Orbit: Low lunar
+Launch: 2026-11-02 / Clear sky. Favorable transfer window.
+Slots: 4 / 7. Payload capacity: 90 kg. Battery: 24 Wh. Storage: 20 units.
+
+PERFORMANCE
+Cost: $740 / Budget $1,200. Mass: 67 kg.
+Generation: 22 W. Installed load: 17 W.
+Mission duration: 9.6 hours. Health: 100%.
+Observations: 6.03187 / 10. Returned data: 18.0955 / 21.
+Generated: 18.0955. Onboard: 0. Battery: 21.7128 Wh.
+Educational score: 54 / 100.
+
+SCIENTIFIC RESULTS
+Camera installed: surface imaging was part of the science plan.
+Only collected and returned data contributes to mission performance.
+
+TIMELINE
+Launch: countdown and ascent started.
+Orbit insertion complete: operations started.
+Hour 2.8: emergency instrument overheating detected.
+Hour 2.8: issue 3, response 1 applied.
+Hour 2.8: Decision: instrument overheating -> stopped science and cleared heat. Result: health 100%; battery 24.0 Wh; stored 0.0. Science disabled, transmission enabled. Recovery timers may still be active.
+Hour 6.4: emergency solar shortage detected.
+Hour 6.4: issue 1, response 1 applied.
+Hour 6.4: Decision: reduced solar output -> stopped science to reduce load. Result: health 100%; battery 24.0 Wh; stored 0.0. Science disabled, transmission enabled. Recovery timers may still be active.
+Hour 9.6: mission ended. Health 100%; observations 6.0; returned data 18.1.
+
+DECISIONS & CONSEQUENCES
+Hour 2.8: Decision: instrument overheating -> stopped science and cleared heat. Result: health 100%; battery 24.0 Wh; stored 0.0. Science disabled, transmission enabled. Recovery timers may still be active.
+Hour 6.4: Decision: reduced solar output -> stopped science to reduce load. Result: health 100%; battery 24.0 Wh; stored 0.0. Science disabled, transmission enabled. Recovery timers may still be active.
+The selected instruments generated 18.0955 data units; 18.0955 reached Earth and 0 remained onboard.
+Final reserve: 21.7128 Wh. Remaining health: 100%. These measured outcomes include all operating choices.
+
+FINAL EVALUATION
+Battery energy is stored in Wh; solar power is generated in W.
+A blocked Earth link requires onboard storage until contact returns.
+Allow more transmission time before ending the mission.
+Keep science enabled longer when power allows.
+
+All numerical values are fictional game balance.
+Images below are supplied illustrations, not captures from this flight.
+
+LUNAR REFERENCE IMAGERY
+Supplied NASA reference imagery illustrates lunar features; these are not captures from this fictional flight.
+@IMAGE 0
+Challenger Astronauts Memorialized on the Moon
+Apollo is a 524 km-wide impact basin located inside the giant South Pole–Aitken basin on the Moon. NASA identified it as a potential region for future human lunar exploration. After the Space Shuttle Challenger disaster, seven craters on Apollo Basin's eastern rim were named in honor of the seven crew members who lost their lives.
+

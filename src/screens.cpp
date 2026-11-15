@@ -13,7 +13,7 @@ namespace mission {
             for(int row=0;row<2;++row){const char* word=row==0?"DEAD CODERS":"SPACE MISSION";
                 float width=MeasureTextEx(title,word,70,2).x;
                 DrawTextEx(title,word,{800-width/2,185.0f+row*90},70,2,row==0?kText:kAccent);}
-            Text("Build. Launch. Explore.",570,385,28,kGold);
+            
             if(Button({180,455,400,72},"PLAY",in,true,true))Next(g,a);
             if(Button({180,635,400,65},"SETTINGS",in))g.overlay=2;
             if(Button({180,720,400,65},"INFO",in))g.overlay=1;
