@@ -6,7 +6,8 @@
             "type": "shell",
             "command": "g++",
             "args": [
-                "src/main.cpp",
+                "-std=c++17",
+                "src/main.cpp", "src/model.cpp", "src/ui.cpp", "src/rendering.cpp", "src/simulation.cpp", "src/screens.cpp", "src/reports.cpp", "src/assets.cpp", "src/calendar.cpp",
                 //add other src files here seperated by commas
 
 

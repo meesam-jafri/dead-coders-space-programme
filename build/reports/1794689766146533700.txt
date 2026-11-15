@@ -1,0 +1,39 @@
+LUNAR MISSION / SUCCESS
+
+Ship: Carrier
+Ground team: Ivo / Scientist; 
+Payloads:
+  Advanced camera
+  Lunar camera
+  Small solar panel
+  Large solar panel
+  Basic antenna
+  Battery pack
+Rocket: Standard Launcher
+Orbit: Low lunar
+Launch: DAY 02 / Clear / ideal transfer
+
+Cost: 1120 / 1200 credits. Mass: 165 kg.
+Generation: 64 W. Installed load: 32 W.
+Mission duration: 4.22603 hours. Health: 100%.
+Observations: 12.9841 / 10. Returned data: 38.9524 / 21.
+Generated: 38.9524. Onboard: 0. Battery: 24 Wh.
+Educational score: 81 / 100.
+
+RESEARCH
+Camera installed: surface imaging was part of the science plan.
+Only collected and returned data contributes to mission performance.
+
+TIMELINE
+Launch: countdown and ascent started.
+Orbit insertion complete: operations started.
+Hour 2.8: issue 1, response 1 applied.
+
+LESSONS / RECOMMENDATIONS
+Battery energy is stored in Wh; solar power is generated in W.
+A blocked Earth link requires onboard storage until contact returns.
+Your radio returned the required science. Try a lower-cost design.
+Observation target met. Compare other instrument combinations.
+
+All numerical values are fictional game balance.
+Images below are supplied illustrations, not captures from this flight.
