@@ -1,4 +1,25 @@
-AI model: GPT-6 (Codex)
+AI model: GPT 6
+
+1) write a full prototype code which is a space mission game, 2d . use shapes etc for everything. utlise ur power. make it such tht it is a winning project. use raylib raymath etc. all in one main.cpp like no classes etc one code file only. do it
+
+2) write a read me file which has all the knowldege of what we are going to do and codex understands it easily. also change the fonts plz as this is very badly readable . moreover tell codex not to change any file, only change main.cpp ONLY. dont change the main.cpp rn i will ask codex now, u only write the readme with all the details of design etc. be simple. also make it such tht i can also understand it and change it.
+
+3) write a prompt to make execute the game in a good way now. also make it interactive. add the tips thing and hover effects and shadows and use 2-3 colors for specifying thing. need good cool fonts. this looks basic. need to decrease the info things and make it more visually good. u should direct it now rather than telling what to do tell how to do and give specific details about everything. the codex dont need to read readme and start doing work as u say. lets start. make a responsive game. as it should look. a cute responsive ux game with dspacy feel and futuristic sci fi vibes
+
+4) write a dumpcode.bat which makes a txt file of all the codes in the folders
+
+5) convert this code into one main.cpp
+
+6) i have this image can u use this to make a simple 3d model whcih revolves with the speed of time set of the mission with spacecraft at a fixed point and the moon rotation. and stars bakground moving a little like panaroma. is it possible or not if yes then writ esimple code of it wihcih uses this moonmap.png
+
+7) not running. it opens and close automaticaly
+
+
+
+
+
+
+AI model: GPT-6 astra Codex
 
 1) this folder is going to be our final submission for the hackthon. we re going to add everything in this like in assets and src and include and also mantain the vscode folder and its files. u have to work in meesam branch. i will give u prompt from gpt and then use tht to make as directed
 
