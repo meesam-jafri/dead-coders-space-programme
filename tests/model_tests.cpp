@@ -4,6 +4,10 @@
 using namespace mission;
 int main(){
     AudioFeedback silent;
+    assert(DaysInMonth(2024,2)==29&&DaysInMonth(2100,2)==28&&DaysInMonth(2000,2)==29);
+    assert(FirstWeekday(2026,11)==6&&FirstWeekday(2000,1)==5);
+    assert(Money(1200)=="$1,200"&&Money(-60)=="-$60");
+    assert(Clock(3661)=="01:01:01");
     GameState empty;
     assert(!BuildIssue(empty).empty());
     for(int chassis=0;chassis<2;++chassis){
@@ -15,6 +19,7 @@ int main(){
         assert(Readiness(g).empty());
         g.date=0;assert(!Readiness(g).empty());g.date=1;
         auto original=g.installed;Go(g,3,silent);Go(g,4,silent);assert(g.installed==original);
+        g.calendarMonth=12;assert(DateLabel(g)=="2026-11-02"&&Readiness(g).empty());
         StartFlight(g);g.reportSaved=true;g.stage=9;
         for(int i=0;i<2600&&g.stage==9;++i){
             if(g.flight.event>=0){EventChoice(g,0);g.flight.camera=true;}
@@ -28,5 +33,5 @@ int main(){
         assert(g.installed==original);
         if(chassis==0){g.reportSaved=false;SaveReport(g);assert(g.reportSaved);assert(g.reportText.find("SUCCESS")!=std::string::npos);assert(g.reportText.find("Scout")!=std::string::npos);}
     }
-    std::cout<<"PASS: readiness, totals, navigation persistence, two successful builds, resource bounds, two-event cap, report saving.\n";
+    std::cout<<"PASS: calendar, currency, clock, readiness, totals, navigation persistence, two successful builds, resource bounds, two-event cap, report saving.\n";
 }

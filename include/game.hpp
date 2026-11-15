@@ -13,10 +13,11 @@
 #include <cstdio>
 namespace mission {
     constexpr int kWidth=1600, kHeight=900, kBudget=1200;
-    constexpr Color kBackground{12,12,14,255}, kPanel{26,26,29,255}, kBorder{67,62,58,255};
-    constexpr Color kText{246,241,232,255}, kMuted{176,170,160,255};
-    constexpr Color kAccent{255,139,54,255}, kGold{240,189,94,255};
-    constexpr Color kDanger{244,65,65,255}, kSuccess{138,203,157,255};
+    constexpr Color kBackground{15,27,38,255}, kPanel{23,39,51,255}, kBorder{61,82,93,255};
+    constexpr Color kText{245,232,209,255}, kMuted{170,184,185,255};
+    constexpr Color kAccent{32,165,166,255}, kGold{224,207,174,255};
+    constexpr Color kDanger{221,86,57,255}, kSuccess=kAccent;
+    constexpr Color kSelected{25,70,77,255}, kMoonColor{176,170,160,255};
     // All credits, masses, power ratings, simulation rates and scores are fictional educational values.
     constexpr const char* stages[]={
         "Mission: Lunar Recon","Select mission","Select spacecraft","Recruit your team","Spacecraft assembly","Select rocket","Select orbit","Launch date","Launch","Mission operations","Mission results"};
@@ -100,7 +101,7 @@ namespace mission {
     };
     struct Flight {
         float time=0,energy=0,stored=0,returned=0,generated=0,observations=0,health=100,launch=0;
-        float radioFault=0,heat=0,pointing=0,solarFault=0,risk=0;
+        float imagingStored=0,imagingReturned=0; float radioFault=0,heat=0,pointing=0,solarFault=0,risk=0;
         int mode=1,event=-1,nextEvent=0;
         bool camera=true,transmit=true;
         std::array<int,5> events{
@@ -165,7 +166,8 @@ namespace mission {
         }
         void Close() {
             if (ready) {
-                if(hasAmbience)UnloadMusicStream(ambience); UnloadSound(error);UnloadSound(launch);UnloadSound(complete); UnloadSound(select);
+                if(hasAmbience)UnloadMusicStream(ambience);
+                UnloadSound(error);UnloadSound(launch);UnloadSound(complete); UnloadSound(select);
                 UnloadSound(navigate);
                 CloseAudioDevice();
             }
@@ -185,10 +187,17 @@ namespace mission {
     // Textures load once and use nine-slice borders so corners do not stretch.
     Texture2D LoadPhoto(const char* path);
     struct UiSkin {
-        std::array<Texture2D,3> photos{}; Texture2D info{}, panel{}, normal{}, selected{}, barTrack{}, barFill{}, marker{};
+        std::array<Texture2D,6> photos{}; std::array<Texture2D,4> portraits{}; Texture2D menuBackground{},earth{}; Texture2D cursor{}, info{}, panel{}, normal{}, selected{}, barTrack{}, barFill{}, marker{};
         std::string root;
         void Load() {
-            const char* candidates[]={"assets/kenney_ui-pack-space-expansion/", "../assets/kenney_ui-pack-space-expansion/"};
+            if(FileExists("assets/cursor/cursor.png")){
+                cursor=LoadTexture("assets/cursor/cursor.png");
+                if(cursor.id)SetTextureFilter(cursor,TEXTURE_FILTER_POINT);
+            }
+            if(FileExists("assets/background/background.png"))menuBackground=LoadTexture("assets/background/background.png");
+            if(FileExists("assets/background/earth.png"))earth=LoadTexture("assets/background/earth.png");
+            const char* roles[]={"engineer","scientist","pilot","doctor"};
+            for(int i=0;i<4;++i){std::string path=std::string("assets/icons/")+roles[i]+".png";if(FileExists(path.c_str()))portraits[i]=LoadTexture(path.c_str());}            const char* candidates[]={"assets/kenney_ui-pack-space-expansion/", "../assets/kenney_ui-pack-space-expansion/"};
             for(const char* candidate:candidates) {
                 if(DirectoryExists(candidate)) { root=candidate; break; }
             }
@@ -200,7 +209,7 @@ namespace mission {
                 if(texture.id) SetTextureFilter(texture,TEXTURE_FILTER_BILINEAR);
                 return texture;
             };
-            for(int i=0;i<3;++i){std::string path="assets/moon/"+std::to_string(i+1)+".jpg";if(FileExists(path.c_str()))photos[i]=LoadPhoto(path.c_str());} if(FileExists("assets/icons/info.png")){Image icon=LoadImage("assets/icons/info.png"); if(icon.data){Color* colors=LoadImageColors(icon);float radius=icon.width*0.36f;for(int y=0;y<icon.height;++y)for(int x=0;x<icon.width;++x)if(Vector2Distance({float(x),float(y)},{icon.width/2.0f,icon.height/2.0f})>radius)colors[y*icon.width+x].a=0;Image masked{colors,icon.width,icon.height,1,PIXELFORMAT_UNCOMPRESSED_R8G8B8A8};info=LoadTextureFromImage(masked);UnloadImageColors(colors);UnloadImage(icon);}} panel=load("Grey/Default/button_square_header_large_rectangle_screws.png");
+            for(int i=0;i<6;++i){std::string path="assets/moon/"+std::to_string(i+1)+".jpg";if(FileExists(path.c_str()))photos[i]=LoadPhoto(path.c_str());} if(FileExists("assets/icons/info.png")){Image icon=LoadImage("assets/icons/info.png"); if(icon.data){Color* colors=LoadImageColors(icon);float radius=icon.width*0.36f;for(int y=0;y<icon.height;++y)for(int x=0;x<icon.width;++x)if(Vector2Distance({float(x),float(y)},{icon.width/2.0f,icon.height/2.0f})>radius)colors[y*icon.width+x].a=0;Image masked{colors,icon.width,icon.height,1,PIXELFORMAT_UNCOMPRESSED_R8G8B8A8};info=LoadTextureFromImage(masked);UnloadImageColors(colors);UnloadImage(icon);}} panel=load("Grey/Default/button_square_header_large_rectangle_screws.png");
             normal=load("Grey/Default/button_square_header_small_rectangle.png");
             selected=load("Grey/Default/button_square_header_small_rectangle.png");
             barTrack=load("Grey/Default/bar_round_large.png");
@@ -208,7 +217,7 @@ namespace mission {
             marker=load("Grey/Default/bar_round_large_square.png");
         }
         void Unload() {
-            for(auto texture:photos){if(texture.id)UnloadTexture(texture);} for(Texture2D texture:{info,panel,normal,selected,barTrack,barFill,marker})
+            for(auto texture:portraits){if(texture.id)UnloadTexture(texture);} for(auto texture:{menuBackground,earth}){if(texture.id)UnloadTexture(texture);} for(auto texture:photos){if(texture.id)UnloadTexture(texture);} for(Texture2D texture:{cursor,info,panel,normal,selected,barTrack,barFill,marker})
             if(texture.id) UnloadTexture(texture);
         }
     };
@@ -284,12 +293,17 @@ void Text(const std::string&,float,float,int=20,Color=kText);
 void WrappedText(const std::string&,float,float,int,int,Color);
 void Panel(Rectangle,Color=kPanel,Color=kBorder);
 bool Hovered(Rectangle,const Input&);
-bool Button(Rectangle,const char*,const Input&,bool=true,bool=false);
+bool Button(Rectangle,const char*,const Input&,bool=true,bool=false,bool selected=false);
 void Notice(GameState&,const std::string&,bool error=true); void Go(GameState&,int,const AudioFeedback&);
 void StartFlight(GameState&); void Next(GameState&,const AudioFeedback&);
-void Moon(Vector2,float,Color=kMuted); void Stars(float);
+void Moon(Vector2,float,Color=kMoonColor); void Stars(float);
 void Ship(Vector2,float,int,float); void RocketArt(Vector2,int,float);
-void Meter(const char*,float,float,float,float,Color); void Tooltip(const Input&,Rectangle,const char*);
+void Meter(const char*,float,float,float,float,Color);
+void BeginTooltips(Input&,int context);
+void Tooltip(const Input&,Rectangle,const char*,const char* title="ENGINEERING NOTE",bool research=false);
+void InfoTip(Rectangle,const Input&,const char* title,const char* text,bool research=true);
+void DrawTooltips(); void ClearTooltips();
+void DrawCost(const GameState&,const Input&,float);
 void EventChoice(GameState&,int); void Simulate(GameState&,float,const AudioFeedback&); int Score(const GameState&);
 void Screen(GameState&,const Input&,const AudioFeedback&,float); void Overlay(GameState&,const Input&,const AudioFeedback&);
 std::string Money(int); std::string Clock(float seconds);

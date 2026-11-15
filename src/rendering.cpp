@@ -1,6 +1,7 @@
 #include "game.hpp"
 namespace mission {
     void Moon(Vector2 p,float r,Color c){
+        constexpr Color kBackground{12,12,14,255};
         DrawCircleV(p,r+16,Fade(c,0.06f));
         DrawCircleV(p,r,c);
         for(int i=0;i<12;++i){
@@ -13,7 +14,7 @@ namespace mission {
     void Stars(float time){
         ClearBackground(kBackground);
         DrawRectangleGradientV(0,0,1600,900,kBackground,{
-            27,19,15,255}
+            18,35,45,255}
         );
         for(int i=0;i<160;++i){
             float x=std::fmod(i*491.0f+time*(i%3+1)*2,1600.0f);
@@ -23,6 +24,7 @@ namespace mission {
         }
     }
     void Ship(Vector2 p,float s,int kind,float time){
+        constexpr Color kAccent{255,139,54,255}, kMuted{176,170,160,255};
         p.y+=std::sin(time*1.2f)*4;
         auto point=[&](float x,float y){return Vector2{p.x+x*s,p.y+y*s};};
         auto plate=[&](float x,float y,float w,float h,Color color){
@@ -95,6 +97,7 @@ namespace mission {
         }
     }
     void RocketArt(Vector2 p,int type,float flame){
+        constexpr Color kText{246,241,232,255}, kAccent{255,139,54,255}, kGold{240,189,94,255}, kDanger{244,65,65,255};
         float w=30+type*12;
         DrawRectangleRounded({
             p.x-w,p.y-100,w*2,180}
@@ -140,20 +143,6 @@ namespace mission {
             BeginScissorMode(int(x),int(y+66),int(300*fraction),20);
             SkinPatch(Skin().barFill,bar,8,color);
             EndScissorMode();
-        }
-    }
-    void Tooltip(const Input& in,Rectangle b,const char* tip){
-        static Vector2 last{};
-        static float dwell=0; static double lastFrame=0;
-        if(Vector2Distance(last,in.mouse)>3)dwell=0;
-        else if(GetTime()!=lastFrame)dwell+=GetFrameTime(); lastFrame=GetTime();
-        last=in.mouse;
-        if(Hovered(b,in)&&dwell>0.25f){
-            float x=Clamp(in.mouse.x-430,20,1110),y=Clamp(in.mouse.y+24,110,680);
-            Panel({
-                x,y,450,125}
-            ,kPanel,kAccent);
-            WrappedText(tip,x+18,y+16,414,21,kText);
         }
     }
 

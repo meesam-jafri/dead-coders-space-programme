@@ -1,0 +1,40 @@
+LUNAR MISSION / FAILURE
+
+MISSION CONFIGURATION
+Ship: Scout
+Ground team: Engineer; Scientist; Pilot; 
+Payloads:
+  Battery pack
+  Lunar camera
+  Basic antenna
+  Small solar panel
+  Small solar panel
+Rocket: Budget Launcher
+Orbit: High lunar
+Launch: 2026-11-02 / Clear sky. Favorable transfer window.
+
+PERFORMANCE
+Cost: $785 / Budget $1,200. Mass: 77 kg.
+Generation: 44 W. Installed load: 17 W.
+Mission duration: 2.91972 hours. Health: 100%.
+Observations: 7.22613 / 10. Returned data: 21.6784 / 21.
+Generated: 21.6784. Onboard: 0. Battery: 24 Wh.
+Educational score: 63 / 100.
+
+RESEARCH
+Camera installed: surface imaging was part of the science plan.
+Only collected and returned data contributes to mission performance.
+
+TIMELINE
+Launch: countdown and ascent started.
+Orbit insertion complete: operations started.
+Hour 2.8: issue 1, response 1 applied.
+
+LESSONS / RECOMMENDATIONS
+Battery energy is stored in Wh; solar power is generated in W.
+A blocked Earth link requires onboard storage until contact returns.
+Your radio returned the required science. Try a lower-cost design.
+Keep science enabled longer when power allows.
+
+All numerical values are fictional game balance.
+Images below are supplied illustrations, not captures from this flight.

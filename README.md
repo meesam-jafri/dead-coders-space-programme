@@ -18,10 +18,10 @@ The player selects a mission, spacecraft, ground team, scientific payloads, rock
 
 ## 2. Art direction
 
-The look is **simple, clean, polished, and game-like**: **near-black space and charcoal surfaces, orange selections and primary actions, amber for COST, strong red warnings, restrained green for passed checks, and warm white text.** Orange means an action or selection; red means risk or a blocked action. Do not use red for successful installations. Spacecraft need distinctive silhouettes and mechanical detail: layered hulls, segmented arrays, antennas, telescope housings, vents, docking structures and engine clusters. Keep the selected craft static when payload choices change. Use the attached sketches to decide where objects and buttons belong.
+The look is **simple, clean, polished, and game-like**: **dark navy (#0F1B26) backgrounds, warm cream (#F5E8D1) text, teal (#20A5A6) selections and success, and coral (#DD5639) primary actions and warnings.** Use lighter/darker shades for readable contrast. Preserve the current spacecraft, planet and scientific artwork colors. Do not use red for successful installations. Spacecraft need distinctive silhouettes and mechanical detail: layered hulls, segmented arrays, antennas, telescope housings, vents, docking structures and engine clusters. Keep the selected craft static when payload choices change. Use the attached sketches to decide where objects and buttons belong.
 
 - Use rounded or carefully shaped panels, good contrast, gentle highlights, hover scaling, and click feedback.
-- Keep the important artwork large and the explanatory text short. Explain difficult words in a **one-sentence tooltip** on hover or with an info icon.
+- Keep the important artwork large and the explanatory text short. Explain engineering choices in a short, opaque tooltip drawn above the screen. Hover an info icon for a preview; click to pin, then click elsewhere to close.
 - Prefer actual supplied assets over generic placeholder boxes. If an optional asset is absent, use a clean shape-based fallback; never crash.
 - **COST remains visible throughout planning** (spacecraft, team, payload, rocket, orbit, and date). The total must keep updating rather than restarting on each screen. Clicking it may show a simple breakdown.
 - Every planning screen needs **BACK** and **NEXT/CONFIRM** controls, with a clear reason whenever NEXT is disabled.
@@ -79,7 +79,7 @@ These are the **known** folders/files from the current screenshots. Other existi
 Use `assets/kenney_ui-pack-space-expansion/` as a **visual resource for game UI**:
 
 - Inspect its actual images/atlases first, then choose suitable buttons, icons, tabs, arrows, bars, frames, and panel decorations.
-- Reuse matching elements across screens to make the interface cohesive. Use neutral Kenney frames tinted to the orange/black palette. Avoid blue chrome and large light-grey controls.
+- Reuse matching elements across screens to make the interface cohesive. Use neutral Kenney frames tinted to the navy/cream palette, with teal selected states and coral primary actions.
 - Use `DrawTexturePro()` for image sprites and source rectangles where appropriate. If a panel can be resized cleanly with nine-slice rendering, use `DrawTextureNPatch()` where compatible with the installed raylib version.
 - Preserve transparency, aspect ratios, and readable text. **Do not stretch decorative corners or use mismatched assets just to use the pack.**
 - `assets/buttons/` and `assets/cursor/` may also contain useful custom elements; inspect them before drawing replacements.
@@ -109,13 +109,13 @@ Use **`assets/moon/1.jpg`**, **`assets/moon/2.jpg`**, and **`assets/moon/3.jpg`*
 ## 5. Screens — follow the paper storyboard
 
 1. **START SCREEN:** Starfield, Earth rising partly from bottom of screen, small rocket/ship detail, and the large `DEAD CODERS` / `SPACE MISSION` title at the top-center. Tagline `Build. Launch. Explore.`; **PLAY, SETTINGS, INFO** arranged vertically. Apply **Liquidnight to the main heading now**, with polished title hierarchy and subtle motion.
-2. **SELECT MISSION:** Three illustrated cards **Moon / Mars / Jupiter**; only Moon unlocked. Hover reveals objective in a compact info panel. BACK and NEXT.
+2. **SELECT MISSION:** Three illustrated cards **Moon / Mars / Jupiter**; only Moon unlocked. Hover smoothly expands one card over 0.3 seconds to reveal its objective, difficulty, challenge and reward; leaving restores all three cards. Mars/Jupiter expansion is preview only. BACK and NEXT.
 3. **SELECT SHIP:** Three visually different ships (**Scout / Explorer / Carrier**) with cost, capacity, and capability. Selecting highlights a ship. Keep persistent COST and BACK.
 4. **SELECT TEAM:** Four portraits (**Doctor / Engineer / Scientist / Pilot**) with plus/minus selection, cost, and team count. The Lunar Mission is robotic: selected specialists work from **mission control**. Doctor is mainly relevant to future crewed missions.
 5. **SELECT PAYLOAD:** **Left:** mouse-wheel list with +/− and a visible draggable scrollbar (track clicks and drag supported). **Center:** large preview of chosen ship. **Right:** checklist and resource totals. **IMPORTANT UPDATED RULE BELOW:** ship artwork is static when payloads change.
 6. **SELECT ROCKET:** Select one of three simple rockets; cost and payload mass determine compatibility. No rocket-building minigame.
 7. **SELECT ORBIT:** Choose a basic lunar orbit profile from highlighted paths/options. Keep it visual and straightforward; do not make an orbital-physics puzzle.
-8. **SELECT LAUNCH DATE:** Real Gregorian month grid with Monday-Sunday headings, correct month lengths/leap years, previous/next month controls, ISO selected date, weather symbols, wind speeds, transfer suitability and clear red blocked-day labels. Weather is fictional deterministic data, never a live forecast. Perform a short automatic readiness check.
+8. **SELECT LAUNCH DATE:** Real Gregorian month grid with Monday-Sunday headings, correct month lengths/leap years, previous/next month controls, ISO selected date, weather symbols, wind speeds, transfer suitability and clear coral blocked-day labels. Weather is fictional deterministic data, never a live forecast. Perform a short automatic readiness check.
 9. **LAUNCH SEQUENCE:** Countdown, ignition, liftoff, simple stage separation, spacecraft deployment, and transition to lunar orbit. Include launch audio and simplified telemetry. Allow pause/skip without breaking mission state.
 10. **MISSION OPERATIONS:** Cinematic camera-follow view: **spacecraft fixed large in foreground**, huge **curved Moon horizon below** with lunar terrain visibly passing beneath it; subtle drifting stars. **No full Moon globe or visible orbit diagram.** Left STATUS panel; upper-right TELEMETRY; prominent MISSION TIME and TIME LEFT; pause and speed ×1/×3/×5. The easy Lunar Mission has at most **1–2 simple random issues**, with quick clear choices (such as low battery or camera reset).
 11. **MISSION REPORT + ARCHIVE:** Scrollable cream-paper dossier. **Tigreal Rough for report text**, readable heading font, SUCCESS/FAILURE stamp, photos `1.jpg`–`3.jpg`, mission summary, choices, timeline, problems/responses, science returned, performance, brief NASA lessons, and improvement tips. Save reports locally and let the player reopen earlier attempts.
@@ -180,18 +180,29 @@ Do not describe fictional numerical parameters as official NASA data. The 2017 g
 
 The game compiles, remains playable from START to REPORT, matches the hand-drawn UI layouts, has a working large start-page title, uses the specified fonts and available art/sound assets, keeps the ship unchanged during payload selection, saves detailed readable reports, and does not break BACK/NEXT, COST, mission time, or fullscreen behavior.
 
-## Current feedback implementation — orange / black edition
+## Current polish — navy / cream / teal / coral
 
 - **Currency:** all current planning screens and new report snapshots use `$` / USD formatting (for example `$1,200`). These are fictional educational dollar amounts, not real spacecraft prices. Existing archived reports keep their original wording.
 - **Mission selection:** illustrated destination cards with distinct Moon/Mars/Jupiter treatments, availability badges, selection states and a concise lunar objective. Mars and Jupiter remain locked.
 - **Ships:** Scout is a compact hexagonal survey bus; Explorer has a long instrument body and four arrays; Carrier has twin equipment pods, a central spine and multiple engines. Art is procedural and independent of payload installation.
 - **Calendar:** launch dates use the real Gregorian calendar. Weather is reproducible per date. Wind at or above 25 km/h, lightning or a closed transfer window blocks launch. Caution dates may consume additional arrival energy. Browsing months does not clear the chosen date.
 - **Time:** display simulation elapsed/remaining time separately from the accelerated mission clock. The educational conversion is 1 simulation second = 0.08 mission hours (4.8 minutes). x1/x3/x5 changes simulation progress; pausing freezes it. Do not label this as a validated physical trajectory model; a future accuracy algorithm can replace the centralized model.
-- **Report:** cream paper, dark masthead, orange rules, success/failure stamp, numbered section links, performance and configuration sections, timeline, framed/captioned reference images, and a draggable document scrollbar. Values come from the saved attempt, including when reopened from archive.
-- **Warnings:** use red borders/text for failed readiness, unsuitable launch conditions, critical battery/storage/health and anomalies; include the specific reason. Successful payload additions use orange/neutral confirmation.
+- **Report:** cream paper, dark masthead, teal rules, success/failure stamp, numbered section links, performance and configuration sections, timeline, framed/captioned reference images, and a draggable document scrollbar. Values come from the saved attempt, including when reopened from archive.
+- **Warnings:** use coral borders/text for failed readiness, unsuitable launch conditions, critical battery/storage/health and anomalies; include the specific reason. Successful payload additions use teal confirmation.
 - **Audio:** provided button click for UI actions, payload WAV only for installation, error sound for invalid actions/anomalies, rocket sound during the cinematic, mission-complete sound at results, and low-volume looping brown-noise ambience. Sound OFF silences current playback as well as future triggers.
 - **Information:** use the supplied `assets/icons/info.png` for contextual information controls. No asset file is changed; masking for display happens in memory.
 
 ### Build and checks
 
 Use Ctrl+Shift+B, then run `build/game.exe` from the repository root. `--smoke-test` checks startup/shutdown. `--capture-stage N` renders a deterministic test fixture to `build/review/stage-N.png` without saving it into the mission archive. See `DEVELOPMENT.md` for the module map. Automated model tests include date arithmetic, readiness, resource bounds and complete mission runs; screenshots complement those checks rather than proving every interaction.
+### Final UI polish
+
+- Keep the storyboard layout and all gameplay values. Ship artwork stays unchanged when payloads are installed.
+- Large shadowed Polaris Bold page headings; Liquidnight start title, Polaris Semibold controls, Polaris Regular stats, and Tigreal Rough report prose.
+- COST has a bordered container, animated dollar total, brief pulse and signed price delta. Failed installation flashes/shakes only the affected equipment row and explains the restriction.
+- Payload readiness uses animated checkboxes, followed by a separate aligned statistics section. Installed counts appear as badges beside the plus button; zero has no badge.
+- Teal selected controls are distinct from coral primary actions, neutral controls and disabled controls. Operations has separate x1/x3/x5 buttons.
+- Contextual engineering tooltips use one opaque, screen-bounded overlay with a teal border. Relevant notes say `Based on NASA CubeSat 101 (2017)`; game prices and numerical models remain fictional.
+- Educational reference: [NASA CubeSat 101 (October 2017)](https://www.nasa.gov/wp-content/uploads/2017/03/nasa_csli_cubesat_101_508.pdf), including design considerations and preflight/environmental testing. This is not a source of the game's fictional mission values.
+- `assets/cursor/cursor.png` is drawn at the physical pointer position after canvas scaling. It stays crisp at 32 pixels; the system cursor returns outside the canvas, on focus loss, on exit, or if loading fails.
+- Optional visual review: `build/game.exe --capture-stage 4 tooltip` or `--capture-stage 1 moon` (also `mars`, `jupiter`, `default`). Captures are written under `build/review/`; they do not create mission reports.
